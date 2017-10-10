@@ -10,4 +10,17 @@
  */
 public class FiniteField {
     
+    //The prime number p, below 100
+    private int p;
+    
+    //The exponent n, below ... something
+    private int n;
+    
+    public FiniteField(int n, int p){
+        this.p = p;
+        this.n = n;
+    }
+    
+    
+    
 }
