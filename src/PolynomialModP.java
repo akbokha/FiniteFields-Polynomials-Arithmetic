@@ -14,11 +14,11 @@ import java.math.*;
  */
 public class PolynomialModP {
     
-    private int prime;
+    private int mod_prime;
     private ArrayList<Integer> terms;
     
-    public PolynomialModP(ArrayList<Integer> terms, int prime) {
-        this.prime = prime;
+    public PolynomialModP(ArrayList<Integer> terms, int mod_prime) {
+        this.mod_prime = mod_prime;
         this.terms = terms;
     }
     
@@ -46,7 +46,7 @@ public class PolynomialModP {
             }
             sum_terms.add(j, longest.get(j));
         }
-        return new PolynomialModP(sum_terms, prime);
+        return new PolynomialModP(sum_terms, mod_prime);
     }
     
     public ArrayList<Integer> getTerms() {

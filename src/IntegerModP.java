@@ -26,7 +26,7 @@ public class IntegerModP {
     }
     
     private int takeMod(int number) {
-        return mod * (int) Math.floor(number / mod);
+        return (number - ( mod * (int) Math.floor(number / mod)));
     }
 
     @Override
