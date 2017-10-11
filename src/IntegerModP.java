@@ -96,7 +96,16 @@ public class IntegerModP {
     public void setMod(int mod) {
         this.mod = mod;
     }
-
-
-
+    
+    public IntegerModP add (IntegerModP to_be_added) {
+        return new IntegerModP(takeMod(this.number + to_be_added.getNumber()), mod);
+    }
+    
+    public IntegerModP multiply (IntegerModP to_be_added) {
+        return new IntegerModP(takeMod(this.number * to_be_added.getNumber()), mod);
+    }
+    
+    public IntegerModP subtract (IntegerModP to_be_added) {
+        return new IntegerModP(takeMod(this.number - to_be_added.getNumber()), mod);
+    }
 }

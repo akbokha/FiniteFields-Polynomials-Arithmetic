@@ -1,30 +1,29 @@
 import java.util.ArrayList;
-import java.math.*;
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Abdel K. Bokharouss
  */
 public class PolynomialModP {
     
-    private int mod_prime;
-    private ArrayList<Integer> terms;
+    private final int mod_prime;
+    private ArrayList<IntegerModP> terms;
     
     public PolynomialModP(ArrayList<Integer> terms, int mod_prime) {
         this.mod_prime = mod_prime;
-        this.terms = terms;
+        this.terms = takeMod(terms);
     }
     
-    public PolynomialModP sum(PolynomialModP add) {
-        int maxLength = Math.max(this.terms.size(), add.getTerms().size());
-        int minLength = Math.min(this.terms.size(), add.getTerms().size());
+    private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
+        ArrayList<IntegerModP> coeff_modP = new ArrayList<>();
+        for (int i = 0; i < terms.size(); i++) {
+            coeff_modP.add(i, new IntegerModP(terms.get(i), mod_prime));
+        }
+        return coeff_modP;
+    }
+    
+    public PolynomialModP sum(PolynomialModP to_be_added) {
+        int maxLength = Math.max(this.terms.size(), to_be_added.getTerms().size());
+        int minLength = Math.min(this.terms.size(), to_be_added.getTerms().size());
         
         boolean thisPolynomialHasHigherDeg;
         if (maxLength == this.terms.size()) {
@@ -35,21 +34,21 @@ public class PolynomialModP {
         
         ArrayList sum_terms = new ArrayList<>(maxLength);
         for (int i = 0; i < minLength; i++) {
-            sum_terms.add(i, (this.terms.get(i) + add.getTerms().get(i)));
+            sum_terms.add(i, this.terms.get(i).add(to_be_added.getTerms().get(i)));
+        }
+        ArrayList longest;
+        if (thisPolynomialHasHigherDeg) {
+            longest = this.terms;
+        } else {
+            longest = to_be_added.getTerms();
         }
         for (int j = minLength; j < (maxLength - minLength); j++) {
-            ArrayList longest;
-            if (thisPolynomialHasHigherDeg) {
-                longest = this.terms;
-            } else {
-                longest = add.getTerms();
-            }
             sum_terms.add(j, longest.get(j));
         }
         return new PolynomialModP(sum_terms, mod_prime);
     }
     
-    public ArrayList<Integer> getTerms() {
+    public ArrayList<IntegerModP> getTerms() {
         return this.terms;
     }
 }
