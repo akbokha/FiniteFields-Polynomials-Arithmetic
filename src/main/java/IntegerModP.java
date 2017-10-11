@@ -34,8 +34,9 @@ public class IntegerModP {
      * @return {@code number} modulus {@code mod}
      */
     private int takeMod(int number) {
-        System.out.println(number);
-        System.out.println(number / mod);
+        if(number < mod) {
+            return number;
+        }
         return number / mod;
     }
 
