@@ -22,33 +22,78 @@ public class PolynomialModP {
     }
     
     public PolynomialModP sum(PolynomialModP to_be_added) {
+        ArrayList a = new ArrayList<>();
+        ArrayList b = new ArrayList<>();
+        
         int maxLength = Math.max(this.terms.size(), to_be_added.getTerms().size());
-        int minLength = Math.min(this.terms.size(), to_be_added.getTerms().size());
-        
-        boolean thisPolynomialHasHigherDeg;
         if (maxLength == this.terms.size()) {
-            thisPolynomialHasHigherDeg = true;
+            a = this.terms;
+            b = sameLength(to_be_added.getTerms(), maxLength);
         } else {
-            thisPolynomialHasHigherDeg = false;
+            a = sameLength(this.terms, maxLength);
+            b = to_be_added.getTerms();
         }
         
-        ArrayList sum_terms = new ArrayList<>(maxLength);
-        for (int i = 0; i < minLength; i++) {
-            sum_terms.add(i, this.terms.get(i).add(to_be_added.getTerms().get(i)));
+        ArrayList result = new ArrayList<>();
+        for (int i = 0; i < maxLength; i++) {
+            result.add(i, this.terms.get(i).add(to_be_added.getTerms().get(i)));
         }
-        ArrayList longest;
-        if (thisPolynomialHasHigherDeg) {
-            longest = this.terms;
+        return new PolynomialModP(result, mod_prime);
+    }
+    
+    public PolynomialModP scalarMultiple(int b) {
+        ArrayList result = new ArrayList<>();
+        for (int i = 0; i < this.terms.size(); i++) {
+            result.add(i, new IntegerModP((this.terms.get(i).getNumber() * b), mod_prime));
+        }
+        return new PolynomialModP(result, mod_prime);
+    }
+    
+    public PolynomialModP difference (PolynomialModP poly) {
+        ArrayList a = new ArrayList<>();
+        ArrayList b = new ArrayList<>();
+        
+        int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
+        if (maxLength == this.terms.size()) {
+            a = this.terms;
+            b = sameLength(poly.getTerms(), maxLength);
         } else {
-            longest = to_be_added.getTerms();
+            a = sameLength(this.terms, maxLength);
+            b = poly.getTerms();
         }
-        for (int j = minLength; j < (maxLength - minLength); j++) {
-            sum_terms.add(j, longest.get(j));
+        
+        ArrayList result = new ArrayList<>();
+        for (int i = 0; i < maxLength; i++) {
+            result.add(i, this.terms.get(i).subtract(poly.getTerms().get(i)));
         }
-        return new PolynomialModP(sum_terms, mod_prime);
+        return new PolynomialModP(result, mod_prime);
+    }
+    
+    public PolynomialModP product (PolynomialModP poly) {
+        ArrayList a = new ArrayList<>();
+        ArrayList b = new ArrayList<>();
+        
+        int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
+        if (maxLength == this.terms.size()) {
+            a = this.terms;
+            b = sameLength(poly.getTerms(), maxLength);
+        } else {
+            a = sameLength(this.terms, maxLength);
+            b = poly.getTerms();
+        }
+        
+        ArrayList result = new ArrayList<>();
+        for (int i = 0; i < maxLength; i++) {
+            result.add(i, this.terms.get(i).multiply(poly.getTerms().get(i)));
+        }
+        return new PolynomialModP(result, mod_prime);
     }
     
     public ArrayList<IntegerModP> getTerms() {
         return this.terms;
+    }
+    
+    private ArrayList<IntegerModP> sameLength(ArrayList<IntegerModP> poly, int len) {
+        
     }
 }
