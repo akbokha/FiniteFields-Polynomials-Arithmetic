@@ -28,11 +28,13 @@ public class IntegerModP {
     /**
      * Takes the modulus of an integer
      *
-     * @param mod   The modulus to take
+     * @param number The number to take the mod of
      * @return {@code number} modulus {@code mod}
      */
-    private int takeMod(int mod) {
-        return (number - ( mod * (int) Math.floor(number / mod)));
+    private int takeMod(int number) {
+        System.out.println(number);
+        System.out.println(number / mod);
+        return number / mod;
     }
 
 
