@@ -7,10 +7,35 @@ public class PolynomialModP {
     
     private final int mod_prime;
     private ArrayList<IntegerModP> terms;
+    private int degree;
+    
+    public PolynomialModP(PolynomialModP copy) {
+        this.mod_prime = copy.getModPrime();
+        this.degree = copy.getDegree();
+        ArrayList copyList = new ArrayList<>();
+        for (IntegerModP intmodp : copy.getTerms()) {
+            copyList.add(new IntegerModP(intmodp.getNumber(), mod_prime));
+        }
+        this.terms = copyList;
+    }
+    
+    public PolynomialModP(PolynomialModP copy, int mod_prime, int degree_difference) {
+        this.mod_prime = mod_prime;
+        this.degree = copy.getDegree();
+        ArrayList copyList = new ArrayList<>();
+        for (IntegerModP intmodp : copy.getTerms()) {
+            copyList.add(new IntegerModP(intmodp.getNumber(), mod_prime));
+        }
+        for (int i = 0; i <= degree_difference; i++) {
+            copyList.add(0);
+        }
+        this.terms = copyList;
+    }
     
     public PolynomialModP(ArrayList<Integer> terms, int mod_prime) {
         this.mod_prime = mod_prime;
         this.terms = takeMod(terms);
+        this.degree = terms.size() - 1;
     }
     
     private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
@@ -22,21 +47,19 @@ public class PolynomialModP {
     }
     
     public PolynomialModP sum(PolynomialModP to_be_added) {
-        ArrayList a = new ArrayList<>();
-        ArrayList b = new ArrayList<>();
-        
+        PolynomialModP a;
+        PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), to_be_added.getTerms().size());
         if (maxLength == this.terms.size()) {
-            a = this.terms;
-            b = sameLength(to_be_added.getTerms(), maxLength);
+            a = this;
+            b = new PolynomialModP(to_be_added, mod_prime, (degree - to_be_added.getDegree()));
         } else {
-            a = sameLength(this.terms, maxLength);
-            b = to_be_added.getTerms();
+            a = new PolynomialModP(this, mod_prime, (to_be_added.getDegree() - degree));
+            b = to_be_added;
         }
-        
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, this.terms.get(i).add(to_be_added.getTerms().get(i)));
+            result.add(i, a.getTerms().get(i).add(b.getTerms().get(i)));
         }
         return new PolynomialModP(result, mod_prime);
     }
@@ -50,41 +73,37 @@ public class PolynomialModP {
     }
     
     public PolynomialModP difference (PolynomialModP poly) {
-        ArrayList a = new ArrayList<>();
-        ArrayList b = new ArrayList<>();
-        
+        PolynomialModP a;
+        PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
         if (maxLength == this.terms.size()) {
-            a = this.terms;
-            b = sameLength(poly.getTerms(), maxLength);
+            a = this;
+            b = new PolynomialModP(poly, mod_prime, (degree - poly.getDegree()));
         } else {
-            a = sameLength(this.terms, maxLength);
-            b = poly.getTerms();
+            a = new PolynomialModP(this, mod_prime, (poly.getDegree() - degree));
+            b = poly;
         }
-        
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, this.terms.get(i).subtract(poly.getTerms().get(i)));
+            result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)));
         }
         return new PolynomialModP(result, mod_prime);
     }
     
     public PolynomialModP product (PolynomialModP poly) {
-        ArrayList a = new ArrayList<>();
-        ArrayList b = new ArrayList<>();
-        
+        PolynomialModP a;
+        PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
         if (maxLength == this.terms.size()) {
-            a = this.terms;
-            b = sameLength(poly.getTerms(), maxLength);
+            a = this;
+            b = new PolynomialModP(poly, mod_prime, (degree - poly.getDegree()));
         } else {
-            a = sameLength(this.terms, maxLength);
-            b = poly.getTerms();
+            a = new PolynomialModP(this, mod_prime, (poly.getDegree() - degree));
+            b = poly;
         }
-        
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, this.terms.get(i).multiply(poly.getTerms().get(i)));
+            result.add(i, a.getTerms().get(i).multiply(b.getTerms().get(i)));
         }
         return new PolynomialModP(result, mod_prime);
     }
@@ -93,7 +112,11 @@ public class PolynomialModP {
         return this.terms;
     }
     
-    private ArrayList<IntegerModP> sameLength(ArrayList<IntegerModP> poly, int len) {
-        
+    public int getDegree() {
+        return this.degree;
+    }
+    
+    public int getModPrime() {
+        return this.mod_prime;
     }
 }
