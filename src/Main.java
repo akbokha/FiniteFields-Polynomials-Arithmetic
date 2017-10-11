@@ -17,8 +17,8 @@ public class Main {
         String startInfo = "Enter a number between 1 and 7. The numbers corresponds to the following calculations:\n"
                 + "1: Produces the sum, scalar multiple, difference and product of input polynomials \n"
                 + "2: Produces the quotient and remainder of two polynomials\n"
-                + "3: Executes the (Extended) Euclidian algorithm for polynomials\n"
-                + "4: Checks whether tow polynomails in the mod p setting are equal modulo a third polynomial\n"
+                + "3: Executes the (Extended) Euclidean algorithm for polynomials\n"
+                + "4: Checks whether tow polynomials in the mod p setting are equal modulo a third polynomial\n"
                 + "5: Produces the addition and multiplication table of the field Z/p[X]/ q(X) of polynomial q(X)\n"
                 + "6: Upon input of two field elements a and b, produces the sum (a+b), product (a*b) and the quotient (a*b^-1)\n"
                 + "7: Checks primitivity of a field element; finds primitive elements in a field\n";
