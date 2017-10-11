@@ -1,3 +1,5 @@
+package main.java;
+
 /**
  * An integer with a modulus
  *
