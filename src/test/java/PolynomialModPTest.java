@@ -10,13 +10,15 @@ public class PolynomialModPTest {
         ArrayList<Integer> list1 = new ArrayList<>();
         ArrayList<Integer> list1Neg = new ArrayList<>();
         list1.add(1);
-        list1.add(-1);
+        list1Neg.add(-1);
         list1.add(5);
-        list1.add(-5);
+        list1Neg.add(-5);
         list1.add(9);
-        list1.add(-9);
-        PolynomialModP polyl = new PolynomialModP(list1, 3);
-        PolynomialModP poly1Neg = new PolynomialModP(list1Neg, 3);
+        list1Neg.add(-9);
+        PolynomialModP polyl = new PolynomialModP(list1, 11);
+        PolynomialModP poly1Neg = new PolynomialModP(list1Neg, 11);
+        System.out.println(polyl.toString());
+        System.out.println(poly1Neg.toString());
         assertEquals(polyl.negate(), poly1Neg);
     }
 

@@ -33,19 +33,29 @@ public class PolynomialModP implements Cloneable {
         }
         this.terms = copyList;
     }
-    
+
+    @Override
+    public String toString() {
+        return "PolynomialModP{" +
+                "modPrime=" + modPrime +
+                ", terms=" + terms +
+                ", degree=" + degree +
+                '}';
+    }
+
     public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
         this.modPrime = modPrime;
         this.terms = takeMod(terms);
         this.degree = terms.size() - 1;
+        System.out.println(toString());
     }
     
     private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
-        ArrayList<IntegerModP> coeff_modP = new ArrayList<>();
-        for (int i = 0; i < terms.size(); i++) {
-            coeff_modP.add(i, new IntegerModP(terms.get(i), modPrime));
+        ArrayList<IntegerModP> coeffModP = new ArrayList<>();
+        for (int i : terms) {
+            coeffModP.add(new IntegerModP(i, modPrime));
         }
-        return coeff_modP;
+        return coeffModP;
     }
 
     /**
