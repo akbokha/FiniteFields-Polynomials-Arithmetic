@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.util.ArrayList;
 
 /**
  *
@@ -10,15 +6,20 @@
  */
 public class FiniteField {
     
-    //The prime number p, below 100
-    private int p;
+    private int modP;
+    private PolynomialModP polynomial;
+    ArrayList<PolynomialModP> elements;
     
-    //The exponent n, below ... something
-    private int n;
+    public FiniteField(PolynomialModP poly, int modP){
+        this.polynomial = poly;
+        this.modP = modP;
+        findElements();
+    }
     
-    public FiniteField(int n, int p){
-        this.p = p;
-        this.n = n;
+    private void findElements() {
+        ArrayList field_elements = new ArrayList<>();
+        // find elements and add them to field_elements
+        this.elements = field_elements;
     }
     
     
