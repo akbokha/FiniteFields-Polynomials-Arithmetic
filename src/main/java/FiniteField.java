@@ -3,10 +3,12 @@ import java.util.ArrayList;
 /**
  *
  * @author Abdel K. Bokharouss
+ * @author Remco Surtel
  */
 public class FiniteField {
     
     private int modP;
+    private int expN;
     private PolynomialModP polynomial;
     ArrayList<PolynomialModP> elements;
     
@@ -15,14 +17,26 @@ public class FiniteField {
         this.modP = modP;
         findElements();
     }
-    
+
+    public FiniteField(int modP, int expN){
+        this.modP = modP;
+        this.expN = expN;
+        findElements2();
+    }
+
     private void findElements() {
         ArrayList field_elements = new ArrayList<>();
         // find elements and add them to field_elements
         this.elements = field_elements;
     }
+
+    private void findElements2(){
+        ArrayList field_elements = new ArrayList<>();
+        //create a polynomial, and find elements to add to the field
+        this.elements = field_elements;
+    }
     
-    /** private main.java.PolynomialModP takeMod (main.java.PolynomialModP poly)
+    /** private PolynomialModP takeMod (PolynomialModP poly)
      *  needed for other operations
      */
     // 
@@ -35,16 +49,16 @@ public class FiniteField {
     
     // 2.4 second bullet point
     
-    // public main.java.PolynomialModP sumElements(main.java.PolynomialModP a, main.java.PolynomialModP)
+    // public PolynomialModP sumElements(PolynomialModP a, PolynomialModP)
     
-    // public main.java.PolynomialModP productElements(main.java.PolynomialModP a, main.java.PolynomialModP)
+    // public PolynomialModP productElements(PolynomialModP a, PolynomialModP)
     
-    /**  private main.java.PolynomialModP inversePoly(main.java.PolynomialModP)
+    /**  private PolynomialModP inversePoly(PolynomialModP)
      *   needed for other operations
      *   return null object if the inverse does not exist
      */
     
-    // 2.4 thrid bullet point
+    // 2.4 third bullet point
     
     // One of the following options:
    
