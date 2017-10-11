@@ -35,10 +35,34 @@ public class IntegerModP {
         return (number - ( mod * (int) Math.floor(number / mod)));
     }
 
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+
+        IntegerModP that = (IntegerModP) object;
+
+        if (number != that.number) return false;
+        if (mod != that.mod) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + number;
+        result = 31 * result + mod;
+        return result;
+    }
+
     @Override
     public String toString() {
         return number + " mod " + mod;
     }
+
 
     /**
      * Gets the number of the {@link IntegerModP}
