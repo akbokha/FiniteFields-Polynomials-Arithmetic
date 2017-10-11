@@ -34,20 +34,10 @@ public class PolynomialModP implements Cloneable {
         this.terms = copyList;
     }
 
-    @Override
-    public String toString() {
-        return "PolynomialModP{" +
-                "modPrime=" + modPrime +
-                ", terms=" + terms +
-                ", degree=" + degree +
-                '}';
-    }
-
     public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
         this.modPrime = modPrime;
         this.terms = takeMod(terms);
         this.degree = terms.size() - 1;
-        System.out.println(toString());
     }
     
     private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
@@ -173,15 +163,22 @@ public class PolynomialModP implements Cloneable {
     }
 
     @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("");
+        for(int i = terms.size()-1; i >=0; i--) {
+            str.append(terms.get(i).getNumber() + "X^" + i);
+        }
+        return str.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PolynomialModP)) return false;
-
         PolynomialModP that = (PolynomialModP) o;
-
-        if (modPrime != that.modPrime) return false;
-        if (degree != that.degree) return false;
-        return terms.equals(that.terms);
+        if(modPrime != that.getModPrime() || !terms.equals(that.getTerms()) || degree != that.getDegree()) {
+            System.out.println(" prime was false");
+            return false;
+        }
+        return true;
     }
 
     @Override

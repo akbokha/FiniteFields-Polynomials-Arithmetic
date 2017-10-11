@@ -38,13 +38,11 @@ public class IntegerModP {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
-
         IntegerModP that = (IntegerModP) object;
-
-        return number == that.number && mod == that.mod;
+        if(number != that.getNumber() || mod != that.getMod()) {
+            return false;
+        }
+        return true;
     }
 
     @Override
