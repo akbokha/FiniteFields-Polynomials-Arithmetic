@@ -32,10 +32,7 @@ public class IntegerModP {
      * @return {@code number} modulus {@code mod}
      */
     private int takeMod(int number) {
-        if(number < mod) {
-            return number;
-        }
-        return number / mod;
+        return number % mod;
     }
 
 
