@@ -24,7 +24,7 @@ public class PolynomialModP {
         this.degree = copy.getDegree();
         ArrayList copyList = new ArrayList<>();
         for (IntegerModP intmodp : copy.getTerms()) {
-            copyList.add(new IntegerModP(intmodp.getNumber(), mod_prime));
+            copyList.add(intmodp);
         }
         for (int i = 0; i <= degree_difference; i++) {
             copyList.add(0);
