@@ -21,11 +21,17 @@ public class IntegerModP {
      * @param mod    The modulus
      */
     public IntegerModP(int number, int mod) {
-        this.number = takeMod(number);
         this.mod = mod;
+        this.number = takeMod(number);
     }
-    
-    private int takeMod(int number) {
+
+    /**
+     * Takes the modulus of an integer
+     *
+     * @param mod   The modulus to take
+     * @return {@code number} modulus {@code mod}
+     */
+    private int takeMod(int mod) {
         return (number - ( mod * (int) Math.floor(number / mod)));
     }
 
