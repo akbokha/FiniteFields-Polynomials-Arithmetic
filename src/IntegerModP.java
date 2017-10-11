@@ -44,10 +44,7 @@ public class IntegerModP {
 
         IntegerModP that = (IntegerModP) object;
 
-        if (number != that.number) return false;
-        if (mod != that.mod) return false;
-
-        return true;
+        return number == that.number && mod == that.mod;
     }
 
     @Override
