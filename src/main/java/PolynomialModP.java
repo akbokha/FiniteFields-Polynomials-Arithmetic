@@ -1,5 +1,3 @@
-package main.java;
-
 import java.util.ArrayList;
 /**
  * ADT that represents a polynomial with a modulus
