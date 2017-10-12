@@ -36,36 +36,33 @@ public class FiniteField {
         this.elements = field_elements;
     }
     
-    /** private PolynomialModP takeMod (PolynomialModP poly)
-     *  needed for other operations
-     */
-    // 
+    // needed for 2.4.2
     
-    // 2.4 first bullet point
+    public PolynomialModP takeMod(PolynomialModP poly) {
+        return null;
+    }
     
-    // public *toBeDecidedFormat/Collection* getAdditionTable() 
+    public PolynomialModP inverse(PolynomialModP poly) {
+        return null;
+    }
     
-    // public *toBeDecidedFormat/Collection* getMultiplicationTable()
+    public PolynomialModP sum(PolynomialModP a, PolynomialModP b) {
+        return null;
+    }
     
-    // 2.4 second bullet point
+    public PolynomialModP quotient(PolynomialModP a, PolynomialModP b) {
+        return null;
+    }
     
-    // public PolynomialModP sumElements(PolynomialModP a, PolynomialModP)
+    public PolynomialModP product(PolynomialModP a, PolynomialModP b) {
+        return null;
+    }
     
-    // public PolynomialModP productElements(PolynomialModP a, PolynomialModP)
+    public boolean isIrreducible (PolynomialModP poly) {
+        return false;
+    }
     
-    /**  private PolynomialModP inversePoly(PolynomialModP)
-     *   needed for other operations
-     *   return null object if the inverse does not exist
-     */
-    
-    // 2.4 third bullet point
-    
-    // One of the following options:
-   
-    // check primitivity of a field element / find primitive elements
-    
-    // test irreducibility of a polynomial mod p + produce irreducible polynomials of a prescribed degree
-    
-    
-    
+    public PolynomialModP produceIrreduciblePoly(int deg) {
+        return null;
+    }
 }
