@@ -27,7 +27,7 @@ public class PolynomialModP implements Cloneable {
             copyList.add(intmodp);
         }
         for (int i = 0; i <= degree_difference; i++) {
-            copyList.add(0);
+            copyList.add(new IntegerModP(0, modPrime));
         }
         this.terms = copyList;
     }
