@@ -1,9 +1,12 @@
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 /**
  * ADT that represents a polynomial with a modulus
  *
  * @author Abdel K. Bokharouss
  * @author Bart van Helvert
+ * @author Remco Surtel
  */
 public class PolynomialModP implements Cloneable {
     /**
@@ -247,4 +250,40 @@ public class PolynomialModP implements Cloneable {
     public int getModPrime() {
         return this.modPrime;
     }
+
+    /**
+     * Given two polynomials mod p, a and b, this algorithm outputs two polynomials x and y with gcd(a, b) = xa + yb.
+     * See algorithm 1.2.11 from lecture notes.
+     *
+     * @param a Polynomial mod p
+     * @param b Polynomial mod p
+     * @throws IllegalArgumentException if {@code a == null || b == null || a.modP != b.modP}
+     * @return Polynomials x, y, such that gcd(a, b) = xa + yb
+     */
+    public Pair<PolynomialModP, PolynomialModP> ExtEuclid(PolynomialModP a, PolynomialModP b){
+
+        if(a == null || b == null){
+            throw new IllegalArgumentException("The polynomials cannot be null.");
+        }
+        else if(a.getModPrime() != b.getModPrime()){
+            throw new IllegalArgumentException("The polynomials must have the same modulus.");
+        }
+
+        ArrayList<Integer> l = new ArrayList<>(1);
+        l.set(0,1);
+        PolynomialModP x = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP v = new PolynomialModP(l, a.getModPrime());
+        l.set(0,0);
+        PolynomialModP y = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP u = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP zero = new PolynomialModP(l, a.getModPrime());
+
+        while(!(b.equals(zero))){
+            //TODO: Calculate x, y
+        }
+
+        return new Pair<>(x, y);
+
+    }
+
 }

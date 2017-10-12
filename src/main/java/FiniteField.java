@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 /**
  *
  * @author Abdel K. Bokharouss
@@ -8,64 +7,56 @@ import java.util.ArrayList;
 public class FiniteField {
     
     private int modP;
-    private int expN;
     private PolynomialModP polynomial;
-    ArrayList<PolynomialModP> elements;
+    private ArrayList<PolynomialModP> elements;
     
     public FiniteField(PolynomialModP poly, int modP){
         this.polynomial = poly;
         this.modP = modP;
-        findElements();
     }
-
-    public FiniteField(int modP, int expN){
-        this.modP = modP;
-        this.expN = expN;
-        findElements2();
-    }
-
-    private void findElements() {
+    
+    // needed for addition/multiplication table @Joris
+    private ArrayList<PolynomialModP> findElements() {
         ArrayList field_elements = new ArrayList<>();
         // find elements and add them to field_elements
-        this.elements = field_elements;
-    }
-
-    private void findElements2(){
-        ArrayList field_elements = new ArrayList<>();
-        //create a polynomial, and find elements to add to the field
-        this.elements = field_elements;
+        return field_elements;
     }
     
-    /** private PolynomialModP takeMod (PolynomialModP poly)
-     *  needed for other operations
-     */
-    // 
+    // needed for 2.4.2
     
-    // 2.4 first bullet point
+    public PolynomialModP takeMod(PolynomialModP poly){
+        PolynomialModP[] longdivResult = null;
+        try {
+            longdivResult = poly.longDivision(polynomial);
+        } catch (Exception ex) {
+            System.err.println("IllegalArgumentException: " + ex.getMessage());
+        }
+        return longdivResult[1]; // return remainder
+    }
     
-    // public *toBeDecidedFormat/Collection* getAdditionTable() 
+    public PolynomialModP inverse(PolynomialModP poly) {
+        return null;
+    }
     
-    // public *toBeDecidedFormat/Collection* getMultiplicationTable()
+    public PolynomialModP sum(PolynomialModP a, PolynomialModP b) {
+        PolynomialModP result = a.sum(b);
+        return takeMod(result);
+    }
     
-    // 2.4 second bullet point
+    public PolynomialModP quotient(PolynomialModP a, PolynomialModP b) {
+        return null;
+    }
     
-    // public PolynomialModP sumElements(PolynomialModP a, PolynomialModP)
+    public PolynomialModP product(PolynomialModP a, PolynomialModP b) {
+        PolynomialModP result = a.product(b);
+        return takeMod(result);
+    }
     
-    // public PolynomialModP productElements(PolynomialModP a, PolynomialModP)
+    public boolean isIrreducible (PolynomialModP poly) {
+        return false;
+    }
     
-    /**  private PolynomialModP inversePoly(PolynomialModP)
-     *   needed for other operations
-     *   return null object if the inverse does not exist
-     */
-    
-    // 2.4 third bullet point
-    
-    // One of the following options:
-   
-    // check primitivity of a field element / find primitive elements
-    
-    // test irreducibility of a polynomial mod p + produce irreducible polynomials of a prescribed degree
-    
-    
-    
+    public PolynomialModP produceIrreduciblePoly(int deg) {
+        return null;
+    }
 }
