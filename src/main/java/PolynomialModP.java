@@ -32,17 +32,43 @@ public class PolynomialModP implements Cloneable {
         this.terms = copyList;
     }
 
+    /**
+     * Creates a new polynomial
+     *
+     * @param terms     The terms of the polynomial with index as degree
+     * @param modPrime  The modulus associated with the polynomial
+     */
     public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
         this.modPrime = modPrime;
-        this.terms = takeMod(terms);
+        this.terms = takeMod(terms, modPrime);
     }
-    
-    private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
+
+    /**
+     * Takes the modulus of all coefficients of an integer list and stores them in a {@Link IntegerModP}
+     *
+     * @param terms The terms to take the modulus of
+     * @param mod   The modulus to mod the values with
+     * @return A list of terms with a modulus
+     */
+    private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod) {
         ArrayList<IntegerModP> coeffModP = new ArrayList<>();
         for (int i : terms) {
-            coeffModP.add(new IntegerModP(i, modPrime));
+            coeffModP.add(new IntegerModP(i, mod));
         }
+        removeLC0(coeffModP);
         return coeffModP;
+    }
+
+    /**
+     * Removes all leading coefficients with a coefficient of 0
+     * 
+     * @param coeffModP The terms to remove the coefficients of
+     */
+    private void removeLC0(ArrayList<IntegerModP> coeffModP) {
+        if(coeffModP.get(coeffModP.size()-1).getNumber() == 0) {
+            coeffModP.remove(coeffModP.size()-1);
+            removeLC0(coeffModP);
+        }
     }
 
     /**

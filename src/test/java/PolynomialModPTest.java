@@ -18,8 +18,6 @@ public class PolynomialModPTest {
         PolynomialModP polyl = new PolynomialModP(list1, 3);
         PolynomialModP poly1Neg = new PolynomialModP(list1Neg, 3);
         assertEquals(polyl.negate(), poly1Neg);
-        System.out.println(poly1Neg.toString());
-
 
         ArrayList<Integer> list2 = new ArrayList<>();
         ArrayList<Integer> list2Neg = new ArrayList<>();
@@ -44,8 +42,9 @@ public class PolynomialModPTest {
         PolynomialModP poly3 = new PolynomialModP(list3, 1);
         PolynomialModP poly3Neg = new PolynomialModP(list3Neg, 1);
         assertEquals(poly3.negate(), poly3Neg);
-        assertNotEquals(poly3, poly3Neg);
-        assertNotEquals(poly2, poly3Neg);
+
+        System.out.println(poly3);
+        System.out.println(poly3Neg);
     }
 
     @Test
