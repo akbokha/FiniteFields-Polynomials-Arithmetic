@@ -50,7 +50,7 @@ public class PolynomialModP implements Cloneable {
      * @param mod   The modulus to mod the values with
      * @return A list of terms with a modulus
      */
-    private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod) {
+    public ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod) {
         ArrayList<IntegerModP> coeffModP = new ArrayList<>();
         for (int i : terms) {
             coeffModP.add(new IntegerModP(i, mod));
@@ -61,10 +61,13 @@ public class PolynomialModP implements Cloneable {
 
     /**
      * Removes all leading coefficients with a coefficient of 0
-     * 
+     *
      * @param coeffModP The terms to remove the coefficients of
      */
-    private void removeLC0(ArrayList<IntegerModP> coeffModP) {
+    public void removeLC0(ArrayList<IntegerModP> coeffModP) {
+        if(coeffModP.size() == 0) {
+            return;
+        }
         if(coeffModP.get(coeffModP.size()-1).getNumber() == 0) {
             coeffModP.remove(coeffModP.size()-1);
             removeLC0(coeffModP);
@@ -155,11 +158,11 @@ public class PolynomialModP implements Cloneable {
      * @throws CloneNotSupportedException when {@code this} is not cloneable
      */
     public PolynomialModP product(int number) throws CloneNotSupportedException {
-        PolynomialModP poly = (PolynomialModP) this.clone();
-        for(IntegerModP i : poly.terms) {
-            i.setNumber(i.getNumber() * number);
+        ArrayList<Integer> list = new ArrayList<>();
+        for(IntegerModP i : terms) {
+            list.add(i.getNumber() * number);
         }
-        return poly;
+        return new PolynomialModP(list, modPrime);
     }
 
     /**
@@ -177,10 +180,10 @@ public class PolynomialModP implements Cloneable {
         PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
-            PolynomialModP xrminb = new PolynomialModP(new ArrayList<Integer>(b.getDegree() - r.getDegree()), modPrime);
+            PolynomialModP xrminb = new PolynomialModP(new ArrayList<Integer>(r.getDegree() - b.getDegree()), modPrime);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
             q.sum(xrminb.product(lcrDIVlcb));
-            q.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
+            r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
         }
         return new PolynomialModP[]{q, r};
     }
@@ -188,8 +191,11 @@ public class PolynomialModP implements Cloneable {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("");
-        for(int i = terms.size()-1; i >= 0; i--) {
-            str.append(termToString(terms.get(i).getNumber(), i));
+        if(terms.size() != 0) {
+            str.append(termToString(terms.get(terms.size()-1).getNumber(), terms.size()-1, true));
+            for(int i = terms.size()-2; i >= 0; i--) {
+                str.append(termToString(terms.get(i).getNumber(), i, false));
+            }
         }
         return str.toString();
     }
@@ -201,7 +207,7 @@ public class PolynomialModP implements Cloneable {
      * @param pow   The power of the term
      * @return A string that represents this term
      */
-    public String termToString(int coef, int pow) {
+    public String termToString(int coef, int pow, boolean first) {
         if(coef == 0) {
             return "";
         }else if(coef == 1) {
@@ -213,7 +219,12 @@ public class PolynomialModP implements Cloneable {
                 return "-" + termToNoCoefString(pow);
             }
         } else {
-            return coef + termToNoCoefString(pow);
+            if(coef > 0 && !first) {
+                return "+" + coef + termToNoCoefString(pow);
+            } else {
+                return coef + termToNoCoefString(pow);
+            }
+
         }
     }
 
@@ -237,7 +248,6 @@ public class PolynomialModP implements Cloneable {
     public boolean equals(Object o) {
         PolynomialModP that = (PolynomialModP) o;
         if(modPrime != that.getModPrime() || !terms.equals(that.getTerms()) || getDegree() != that.getDegree()) {
-            System.out.println(" prime was false");
             return false;
         }
         return true;

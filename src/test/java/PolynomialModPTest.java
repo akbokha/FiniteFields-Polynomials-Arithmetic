@@ -6,53 +6,118 @@ import static org.junit.Assert.*;
 
 public class PolynomialModPTest {
     @Test
-    public void negate() throws Exception {
+    public void removeLC0() throws Exception {
+        int mod1 = 3;
+
         ArrayList<Integer> list1 = new ArrayList<>();
-        ArrayList<Integer> list1Neg = new ArrayList<>();
         list1.add(1);
-        list1Neg.add(-1);
-        list1.add(5);
-        list1Neg.add(-5);
-        list1.add(9);
-        list1Neg.add(-9);
-        PolynomialModP polyl = new PolynomialModP(list1, 3);
-        PolynomialModP poly1Neg = new PolynomialModP(list1Neg, 3);
-        assertEquals(polyl.negate(), poly1Neg);
+        list1.add(6);
+        list1.add(0);
+        PolynomialModP poly1 = new PolynomialModP(list1, mod1);
 
         ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(1);
+        list2.add(9);
+        list2.add(12);
+        PolynomialModP poly2 = new PolynomialModP(list2, mod1);
+
+        assertEquals(poly1, poly2);
+
+        list2.add(11);
+        PolynomialModP poly3 = new PolynomialModP(list2, mod1);
+
+        assertNotEquals(poly1, poly3);
+    }
+
+    @Test
+    public void negate() throws Exception {
+        int mod1 = 3;
+
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+        list1.add(3);
+        list1.add(4);
+        list1.add(7);
+        PolynomialModP poly1 = new PolynomialModP(list1, mod1);
+
+        ArrayList<Integer> list1Neg = new ArrayList<>();
+        list1Neg.add(-1);
+        list1Neg.add(-3);
+        list1Neg.add(-4);
+        list1Neg.add(-7);
+        PolynomialModP poly1Neg = new PolynomialModP(list1Neg, mod1);
+
+        assertEquals(poly1, poly1Neg.negate());
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(1345);
+        list2.add(2786);
+        list2.add(45620);
+        list2.add(745810);
+        PolynomialModP poly2 = new PolynomialModP(list2, mod1);
+
         ArrayList<Integer> list2Neg = new ArrayList<>();
-        list2.add(5732);
-        list2Neg.add(-5732);
-        list2.add(982);
-        list2Neg.add(-982);
-        list2.add(1356);
-        list2Neg.add(-1356);
-        PolynomialModP poly2 = new PolynomialModP(list2, 33);
-        PolynomialModP poly2Neg = new PolynomialModP(list2Neg, 33);
-        assertEquals(poly2.negate(), poly2Neg);
+        list2Neg.add(-1345);
+        list2Neg.add(-2786);
+        list2Neg.add(-45620);
+        list2Neg.add(-745810);
+        PolynomialModP poly2Neg = new PolynomialModP(list2Neg, mod1);
 
-        ArrayList<Integer> list3 = new ArrayList<>();
-        ArrayList<Integer> list3Neg = new ArrayList<>();
-        list3.add(2);
-        list3Neg.add(-2);
-        list3.add(1);
-        list3Neg.add(-1);
-        list3.add(0);
-        list3Neg.add(-0);
-        PolynomialModP poly3 = new PolynomialModP(list3, 1);
-        PolynomialModP poly3Neg = new PolynomialModP(list3Neg, 1);
-        assertEquals(poly3.negate(), poly3Neg);
+        assertEquals(poly2, poly2Neg.negate());
 
-        System.out.println(poly3);
-        System.out.println(poly3Neg);
+        assertNotEquals(poly1, poly2);
     }
 
     @Test
     public void product() throws Exception {
+        int mod1 = 3;
+        int multiplier = 6;
+
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+        list1.add(3);
+        list1.add(4);
+        list1.add(7);
+        PolynomialModP poly1 = new PolynomialModP(list1, mod1);
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(multiplier * 1);
+        list2.add(multiplier * 3);
+        list2.add(multiplier * 4);
+        list2.add(multiplier * 7);
+        PolynomialModP poly2 = new PolynomialModP(list2, mod1);
+
+        assertEquals(poly1.product(multiplier), poly2);
     }
 
     @Test
     public void longDivision() throws Exception {
+        int mod1 = 3;
+
+        ArrayList<Integer> toTestList1 = new ArrayList<>();
+        toTestList1.add(-3);
+        toTestList1.add(10);
+        toTestList1.add(-5);
+        toTestList1.add(3);
+        PolynomialModP toTestPoly1 = new PolynomialModP(toTestList1, mod1);
+
+        ArrayList<Integer> toTestList2 = new ArrayList<>();
+        toTestList2.add(1);
+        toTestList2.add(3);
+        PolynomialModP toTestPoly2 = new PolynomialModP(toTestList2, mod1);
+
+        ArrayList<Integer> expectedRemainderList1 = new ArrayList<>();
+        expectedRemainderList1.add(4);
+        expectedRemainderList1.add(-2);
+        expectedRemainderList1.add(1);
+        PolynomialModP expectedRemainderPoly = new PolynomialModP(expectedRemainderList1, mod1);
+
+        ArrayList<Integer> expectedQuotientList1 = new ArrayList<>();
+        expectedQuotientList1.add(-7);
+        PolynomialModP expectedQuotientPoly = new PolynomialModP(expectedQuotientList1, mod1);
+
+        assertEquals(toTestPoly1.longDivision(toTestPoly2)[0], expectedQuotientPoly);
+        assertEquals(toTestPoly1.longDivision(toTestPoly2)[1], expectedRemainderPoly);
     }
 
 }
