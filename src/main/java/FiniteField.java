@@ -8,32 +8,19 @@ import java.util.ArrayList;
 public class FiniteField {
     
     private int modP;
-    private int expN;
     private PolynomialModP polynomial;
-    ArrayList<PolynomialModP> elements;
+    private ArrayList<PolynomialModP> elements;
     
     public FiniteField(PolynomialModP poly, int modP){
         this.polynomial = poly;
         this.modP = modP;
-        findElements();
     }
-
-    public FiniteField(int modP, int expN){
-        this.modP = modP;
-        this.expN = expN;
-        findElements2();
-    }
-
-    private void findElements() {
+    
+    // needed for addition/multiplication table @Joris
+    private ArrayList<PolynomialModP> findElements() {
         ArrayList field_elements = new ArrayList<>();
         // find elements and add them to field_elements
-        this.elements = field_elements;
-    }
-
-    private void findElements2(){
-        ArrayList field_elements = new ArrayList<>();
-        //create a polynomial, and find elements to add to the field
-        this.elements = field_elements;
+        return field_elements;
     }
     
     // needed for 2.4.2
