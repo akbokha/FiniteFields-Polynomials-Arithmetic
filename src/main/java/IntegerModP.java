@@ -86,14 +86,14 @@ public class IntegerModP {
     }
     
     public IntegerModP add (IntegerModP add) {
-        return new IntegerModP((this.number + add.getNumber()) % mod, mod);
+        return new IntegerModP(this.number + add.getNumber(), mod);
     }
     
     public IntegerModP multiply (IntegerModP add) {
-        return new IntegerModP((this.number * add.getNumber()) % mod, mod);
+        return new IntegerModP(this.number * add.getNumber(), mod);
     }
     
     public IntegerModP subtract (IntegerModP add) {
-        return new IntegerModP((this.number - add.getNumber()) % mod, mod);
+        return new IntegerModP(this.number - add.getNumber(), mod);
     }
 }
