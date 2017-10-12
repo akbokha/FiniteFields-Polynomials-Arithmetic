@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,8 +27,14 @@ public class FiniteField {
     
     // needed for 2.4.2
     
-    public PolynomialModP takeMod(PolynomialModP poly) {
-        return null;
+    public PolynomialModP takeMod(PolynomialModP poly){
+        PolynomialModP[] longdivResult = null;
+        try {
+            longdivResult = poly.longDivision(polynomial);
+        } catch (Exception ex) {
+            System.err.println("IllegalArgumentException: " + ex.getMessage());
+        }
+        return longdivResult[1]; // return remainder
     }
     
     public PolynomialModP inverse(PolynomialModP poly) {
@@ -34,7 +42,8 @@ public class FiniteField {
     }
     
     public PolynomialModP sum(PolynomialModP a, PolynomialModP b) {
-        return null;
+        PolynomialModP result = a.sum(b);
+        return takeMod(result);
     }
     
     public PolynomialModP quotient(PolynomialModP a, PolynomialModP b) {
@@ -42,7 +51,8 @@ public class FiniteField {
     }
     
     public PolynomialModP product(PolynomialModP a, PolynomialModP b) {
-        return null;
+        PolynomialModP result = a.product(b);
+        return takeMod(result);
     }
     
     public boolean isIrreducible (PolynomialModP poly) {
