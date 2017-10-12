@@ -101,7 +101,7 @@ public class PolynomialModP implements Cloneable {
         }
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).add(b.getTerms().get(i)));
+            result.add(i, (a.getTerms().get(i).add(b.getTerms().get(i))).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -109,7 +109,7 @@ public class PolynomialModP implements Cloneable {
     public PolynomialModP scalarMultiple(int b) {
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < this.terms.size(); i++) {
-            result.add(i, new IntegerModP((this.terms.get(i).getNumber() * b), modPrime));
+            result.add(i, new IntegerModP((this.terms.get(i).getNumber() * b), modPrime).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -127,7 +127,7 @@ public class PolynomialModP implements Cloneable {
         }
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)));
+            result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -145,7 +145,7 @@ public class PolynomialModP implements Cloneable {
         }
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).multiply(b.getTerms().get(i)));
+            result.add(i, (a.getTerms().get(i).multiply(b.getTerms().get(i))).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -182,8 +182,8 @@ public class PolynomialModP implements Cloneable {
         while(r.getDegree() >= b.getDegree()) {
             PolynomialModP xrminb = new PolynomialModP(new ArrayList<Integer>(r.getDegree() - b.getDegree()), modPrime);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
-            q.sum(xrminb.product(lcrDIVlcb));
-            r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
+            q.sum(xrminb.scalarMultiple(lcrDIVlcb));
+            r.sum((xrminb.scalarMultiple(lcrDIVlcb)).product(b).negate());
         }
         return new PolynomialModP[]{q, r};
     }
