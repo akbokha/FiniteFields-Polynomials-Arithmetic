@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /*
@@ -8,13 +10,15 @@ import java.util.Scanner;
 /**
  *
  * @author Abdel K. Bokharouss
+ * @author Joris Rombouts
  */
 public class Main {
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
+
         String startInfo = "Enter a number between 1 and 7. The numbers corresponds to the following calculations:\n"
-                + "1: Produces the sum, scalar multiple, difference and product of input polynomials \n"
+                + "1: Produces the sum, scalar multiple, difference and product of two polynomials \n"
                 + "2: Produces the quotient and remainder of two polynomials\n"
                 + "3: Executes the (Extended) Euclidean algorithm for polynomials\n"
                 + "4: Checks whether tow polynomials in the mod p setting are equal modulo a third polynomial\n"
@@ -27,14 +31,16 @@ public class Main {
 
         String choice = sc.nextLine();
         if (choice.equals("1")) {
-            //input: two polynlmials mod p
+            //input: two polynomials mod p
             //output: sum, difference, product and scalar multiple
             //polynomial calculations
             System.out.println("please enter a prime number");
             int prime = Integer.parseInt(sc.nextLine());
             System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
             String p1 = sc.nextLine();
+            ArrayList<Integer> pol1 = extractPol(p1);
             String p2 = sc.nextLine();
+            ArrayList<Integer> pol2 = extractPol(p2);
             //call polynomial calculations instance
         } else if (choice.equals("2")) {
             //input: two polynomials mod p
@@ -44,7 +50,9 @@ public class Main {
             int prime = Integer.parseInt(sc.nextLine());
             System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
             String p1 = sc.nextLine();
+            ArrayList<Integer> pol1 = extractPol(p1);
             String p2 = sc.nextLine();
+            ArrayList<Integer> pol2 = extractPol(p2);
         } else if (choice.equals("3")) {
             //input: two polynomials (x,y) mod p
             //output: x*a + y*b = gcd(x,y)
@@ -53,7 +61,9 @@ public class Main {
             int prime = Integer.parseInt(sc.nextLine());
             System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
             String p1 = sc.nextLine();
+            ArrayList<Integer> pol1 = extractPol(p1);
             String p2 = sc.nextLine();
+            ArrayList<Integer> pol2 = extractPol(p2);
             System.out.println("Type 0 for Euclid's algorithm for polynomials, or type 1 for the Extended Euclidian Algorithm for polynomials ");
             String euclid = sc.nextLine();
             if (euclid.equals("0")) {
@@ -69,7 +79,9 @@ public class Main {
             int prime = Integer.parseInt(sc.nextLine());
             System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
             String p1 = sc.nextLine();
+            ArrayList<Integer> pol1 = extractPol(p1);
             String p2 = sc.nextLine();
+            ArrayList<Integer> pol2 = extractPol(p2);
             System.out.println("Please enter a third polynomial (the modulo) in the form: c_0 + c_1*x + .... + c_(n-1)*x^(n-1) + c_n*x^(e_n)");
             String p3 = sc.nextLine();
         } else if (choice.equals("5")) {
@@ -96,6 +108,54 @@ public class Main {
             String field = sc.nextLine();
         }
 
+    }
+
+    private static ArrayList<Integer> extractPol(String p1) {
+        ArrayList<Integer> polynomialList= new ArrayList<>();
+        p1 = p1.replace("-", "+-");
+        String[] elements = p1.split("\\+");
+        int maxDeg = 0;
+        for (String degree : elements) {
+            if (!degree.contains("x")) {
+                maxDeg = 0;
+            } else if (!degree.contains("^")) {
+                maxDeg = 1;
+            }
+            if (degree.contains("^")) {
+                if (Integer.parseInt(degree.substring(degree.lastIndexOf("^") + 1) ) > maxDeg) {
+                    maxDeg = Integer.parseInt(degree.substring(degree.lastIndexOf("^") + 1));
+                }
+            }
+        }
+
+        for (int i = 0; i < maxDeg + 1; i++) {
+            polynomialList.add(0);
+        }
+
+        for (String degree : elements) {
+            int deg = 0;
+            if (!degree.contains("x")) {
+                deg = 0;
+            } else if (!degree.contains("^")) {
+                deg = 1;
+                degree = degree.substring(0, degree.indexOf("x"));
+                if (degree.equals("-")) {
+                    degree = "-1";
+                } else if (degree.equals("")) {
+                    degree = "1";
+                }
+            } else if(degree.contains("x^")) {
+                deg = Integer.parseInt(degree.substring(degree.lastIndexOf("^") + 1));
+                degree = degree.substring(0, degree.indexOf("x"));
+                if (degree.equals("-")) {
+                    degree = "-1";
+                } else if (degree.equals("")){
+                    degree = "1";
+                }
+            }
+            polynomialList.set(deg, Integer.parseInt(degree));
+        }
+        return polynomialList;
     }
 
 }
