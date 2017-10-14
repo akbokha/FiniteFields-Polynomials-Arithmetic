@@ -322,4 +322,7 @@ public class PolynomialModP implements Cloneable {
 
     }
 
+    public int Euclid(PolynomialModP a) throws IllegalArgumentException, CloneNotSupportedException {
+        return 0;
+    }
 }

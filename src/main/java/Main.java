@@ -19,12 +19,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         String startInfo = "Enter a number between 1 and 7. The numbers corresponds to the following calculations:\n"
-                + "1: Produces the sum, scalar multiple, difference and product of two polynomials \n"
-                + "2: Produces the quotient and remainder of two polynomials\n"
+                + "1: Produces the sum, difference product of two polynomials and scalar multiple of one of the two" +
+                " polynomials\n"
+                + "2: Produces the quotient and remainder of two polynomials (Long division)\n"
                 + "3: Executes the (Extended) Euclidean algorithm for polynomials\n"
                 + "4: Checks whether tow polynomials in the mod p setting are equal modulo a third polynomial\n"
                 + "5: Produces the addition and multiplication table of the field Z/p[X]/ q(X) of polynomial q(X)\n"
-                + "6: Upon input of two field elements a and b, produces the sum (a+b), product (a*b) and the quotient (a*b^-1)\n"
+                + "6: Upon input of two field elements a and b, produces the sum (a+b), " +
+                "product (a*b) and the quotient (a*b^-1)\n"
                 + "7: Checks primitivity of a field element; finds primitive elements in a field\n";
 
         String polynomialForm = "in the form : c_0 + c_1 x + ....+ c_(n-1) x^(n-1) + c_n x^(e_n)";
@@ -46,12 +48,22 @@ public class Main {
                     ArrayList<Integer> pol1 = extractPol(p1);
                     String p2 = sc.nextLine();
                     ArrayList<Integer> pol2 = extractPol(p2);
-
+                    System.out.println("Please enter 1*(integer) for scalar multiple of polynomial 1, " +
+                            "or 2*(integer) for scalar multiple of polynomial 2 for a given (integer)");
+                    String scalarChoice = sc.nextLine();
+                    int numberScalarM = Integer.parseInt(scalarChoice.substring(scalarChoice.lastIndexOf("*")+1));
+                    computeSum(pol1, pol2, prime);
+                    computeDiff(pol1, pol2, prime);
+                    computeProduct(pol1, pol2, prime);
+                    if (scalarChoice.startsWith("1")) {
+                        computeScalarM(pol1, prime, numberScalarM);
+                    } else {
+                        computeScalarM(pol2, prime, numberScalarM);
+                    }
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
 
-                //call polynomial calculations instance
             } else if (choice.equals("2")) {
                 //input: two polynomials mod p
                 //output: quotient and remainder
@@ -63,7 +75,7 @@ public class Main {
                     ArrayList<Integer> pol1 = extractPol(p1);
                     String p2 = sc.nextLine();
                     ArrayList<Integer> pol2 = extractPol(p2);
-
+                    computeLongDivision(pol1, pol2, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
@@ -78,16 +90,20 @@ public class Main {
                     ArrayList<Integer> pol1 = extractPol(p1);
                     String p2 = sc.nextLine();
                     ArrayList<Integer> pol2 = extractPol(p2);
+
+                    System.out.println("Type 0 for Euclid's algorithm for polynomials, " +
+                            "or type 1 for the Extended Euclidian Algorithm for polynomials ");
+                    String euclid = sc.nextLine();
+                    if (euclid.equals("0")) {
+                        computeEuclidean(pol1, pol2, prime);
+                    } else {
+                        computeExtEuclidean(pol1, pol2, prime);
+                    }
+
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
-                System.out.println("Type 0 for Euclid's algorithm for polynomials, or type 1 for the Extended Euclidian Algorithm for polynomials ");
-                String euclid = sc.nextLine();
-                if (euclid.equals("0")) {
-                    //execute euclids algorithm for polynomials
-                } else {
-                    //execute extended euclids algorithm for polynomials
-                }
+
             } else if (choice.equals("4")) {
                 //input: two polynomials (x,y) mod p, third polynomial z
                 //output: true if (x,y) mod z == 0; false otherwise
@@ -105,7 +121,7 @@ public class Main {
                 System.out.println("Please enter a third polynomial (the modulo)"+ polynomialForm);
                 String p3 = sc.nextLine();
             } else if (choice.equals("5")) {
-                //input: prime p and irreducible polynomail q(x)
+                //input: prime p and irreducible polynomial q(x)
                 //output: addition and multiplication table of the field
                 //Z/pZ[x] / q(x)
                 try {
@@ -128,7 +144,8 @@ public class Main {
                 //input: field element
                 //output: check primitivy of a field element
                 //function: algo 3.4.3, 3.4.4
-                System.out.println("Please enter a field F of order q and prime divisors p1,...,pk of q-e and a in F in the form: [tbd]");
+                System.out.println("Please enter a field F of order q " +
+                        "and prime divisors p1,...,pk of q-e and a in F in the form: [tbd]");
                 String field = sc.nextLine();
             }
         } catch (NumberFormatException e) {
@@ -138,10 +155,47 @@ public class Main {
         }
     }
 
-    public static IntegerModP solve() {
-        IntegerModP answer = null;
-        return answer;
+    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        //System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1+"*a + "+p2+"*b = "+ p1.ExtEuclid(p2));
     }
+
+    private static void computeEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1.Euclid(p2));
+    }
+
+    private static void computeLongDivision(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" = "+p1.longDivision(p2));
+    }
+
+    private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) = "+p1.scalarMultiple(numberScalarM));
+    }
+
+    private static void computeProduct(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        System.out.println("The product of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.product(p2));
+    }
+
+    private static void computeDiff(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        System.out.println("The difference of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.difference(p2));
+    }
+
+    private static void computeSum(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        System.out.println("The sum of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.sum(p2));
+    }
+
     /**
      * Extracts input polynomial of the user into an ArrayList, where the index of the elements in the list
      * corresponds to the degree where that coefficients belongs to.
