@@ -173,9 +173,9 @@ public class Main {
         System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" = "+p1.longDivision(p2));
     }
 
-    private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) {
+    private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) = "+p1.scalarMultiple(numberScalarM));
+        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) = "+p1.product(numberScalarM));
     }
 
     private static void computeProduct(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {

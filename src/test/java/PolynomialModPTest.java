@@ -30,46 +30,7 @@ public class PolynomialModPTest {
     }
 
     @Test
-    public void negate() throws Exception {
-        int mod1 = 3;
-
-        ArrayList<Integer> list1 = new ArrayList<>();
-        list1.add(1);
-        list1.add(3);
-        list1.add(4);
-        list1.add(7);
-        PolynomialModP poly1 = new PolynomialModP(list1, mod1);
-
-        ArrayList<Integer> list1Neg = new ArrayList<>();
-        list1Neg.add(-1);
-        list1Neg.add(-3);
-        list1Neg.add(-4);
-        list1Neg.add(-7);
-        PolynomialModP poly1Neg = new PolynomialModP(list1Neg, mod1);
-
-        assertEquals(poly1, poly1Neg.negate());
-
-        ArrayList<Integer> list2 = new ArrayList<>();
-        list2.add(1345);
-        list2.add(2786);
-        list2.add(45620);
-        list2.add(745810);
-        PolynomialModP poly2 = new PolynomialModP(list2, mod1);
-
-        ArrayList<Integer> list2Neg = new ArrayList<>();
-        list2Neg.add(-1345);
-        list2Neg.add(-2786);
-        list2Neg.add(-45620);
-        list2Neg.add(-745810);
-        PolynomialModP poly2Neg = new PolynomialModP(list2Neg, mod1);
-
-        assertEquals(poly2, poly2Neg.negate());
-
-        assertNotEquals(poly1, poly2);
-    }
-
-    @Test
-    public void scalarMultiple() throws Exception {
+    public void product() throws Exception {
         int mod1 = 3;
         int multiplier = 6;
 
@@ -87,7 +48,7 @@ public class PolynomialModPTest {
         list2.add(multiplier * 7);
         PolynomialModP poly2 = new PolynomialModP(list2, mod1);
 
-        assertEquals(poly1.scalarMultiple(multiplier), poly2);
+        assertEquals(poly1.product(multiplier), poly2);
     }
     
     @Test
@@ -110,7 +71,7 @@ public class PolynomialModPTest {
 
     /*@Test
     public void longDivision() throws Exception {
-        int mod1 = 3;
+        int mod1 = 11;
 
         ArrayList<Integer> toTestList1 = new ArrayList<>();
         toTestList1.add(-3);
@@ -150,9 +111,6 @@ public class PolynomialModPTest {
         coefficientsModP.add(new IntegerModP(2, 4));
         coefficientsModP.add(new IntegerModP(7, 4));
         coefficientsModP.add(new IntegerModP(-3, 4));
-        for (IntegerModP i : coefficientsModP) {
-            System.out.println(i.getNumber());
-        }
         assertEquals(coefficientsModP, poly.getTerms());  
     }
     
@@ -231,7 +189,31 @@ public class PolynomialModPTest {
         ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
         coefficientsModP.add(new IntegerModP(0, 4));
         coefficientsModP.add(new IntegerModP(1, 4));
-        assertEquals(coefficientsModP, polyResult.getTerms());  
+        assertEquals(coefficientsModP, polyResult.getTerms());
+
+        //3X
+        ArrayList<Integer> list3 = new ArrayList<>();
+        list3.add(0);
+        list3.add(3);
+        PolynomialModP poly3 = new PolynomialModP(list3, modP);
+        System.out.println(poly3);
+
+        //X^2
+        ArrayList<Integer> list4 = new ArrayList<>();
+        list4.add(0);
+        list4.add(0);
+        list4.add(1);
+        PolynomialModP poly4 = new PolynomialModP(list4, modP);
+        System.out.println(poly4);
+
+        //X^2*3X = 3X^3
+        ArrayList<Integer> list5 = new ArrayList<>();
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(3);
+        PolynomialModP poly5 = new PolynomialModP(list5, modP);
+        assertEquals(poly5, poly3.product(poly4));
     }
   
 }

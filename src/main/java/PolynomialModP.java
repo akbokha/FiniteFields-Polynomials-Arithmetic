@@ -106,14 +106,6 @@ public class PolynomialModP implements Cloneable {
         return new PolynomialModP(result, modPrime);
     }
     
-    public PolynomialModP scalarMultiple(int b) {
-        ArrayList result = new ArrayList<>();
-        for (int i = 0; i < this.terms.size(); i++) {
-            result.add(i, new IntegerModP((this.terms.get(i).getNumber() * b), modPrime).getNumber());
-        }
-        return new PolynomialModP(result, modPrime);
-    }
-    
     public PolynomialModP difference(PolynomialModP poly) {
         PolynomialModP a;
         PolynomialModP b;
@@ -180,10 +172,25 @@ public class PolynomialModP implements Cloneable {
         PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
-            PolynomialModP xrminb = new PolynomialModP(new ArrayList<Integer>(r.getDegree() - b.getDegree()), modPrime);
+            //Create x^degree(r) - degree(b)
+            ArrayList<Integer> list = new ArrayList<>();
+            for(int i = 0; i < r.getDegree() - b.getDegree(); i++) {
+                list.add(0);
+            }
+            list.add(1);
+            PolynomialModP xrminb = new PolynomialModP(list, modPrime);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
-            q.sum(xrminb.scalarMultiple(lcrDIVlcb));
-            r.sum((xrminb.scalarMultiple(lcrDIVlcb)).product(b).negate());
+            q = q.sum(xrminb.product(lcrDIVlcb));
+
+            System.out.println("b: " + b);
+            System.out.println("X^degree(r)-degree(b) * lc(r)/lc(b) * b: " + (xrminb.product(lcrDIVlcb)));
+
+            r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return new PolynomialModP[]{q, r};
     }
@@ -211,7 +218,11 @@ public class PolynomialModP implements Cloneable {
         if(coef == 0) {
             return "";
         }else if(coef == 1) {
-            return termToNoCoefString(pow);
+            if(!first && pow != 0) {
+                return "+" + termToNoCoefString(pow);
+            } else {
+                return termToNoCoefString(pow);
+            }
         } else if (coef == -1) {
             if (pow == 0) {
                 return "-1" + termToNoCoefString(pow);
