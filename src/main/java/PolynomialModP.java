@@ -26,7 +26,7 @@ public class PolynomialModP implements Cloneable {
         for (IntegerModP intmodp : copy.getTerms()) {
             copyList.add(intmodp);
         }
-        for (int i = 0; i <= degree_difference; i++) {
+        for (int i = 0; i < degree_difference; i++) {
             copyList.add(new IntegerModP(0, modPrime));
         }
         this.terms = copyList;
@@ -125,6 +125,7 @@ public class PolynomialModP implements Cloneable {
     }
     
     public PolynomialModP product(PolynomialModP poly) {
+        int [] new_coefficients = new int[this.terms.size() + poly.getTerms().size() + 1];
         PolynomialModP a;
         PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
@@ -136,8 +137,19 @@ public class PolynomialModP implements Cloneable {
             b = poly;
         }
         ArrayList result = new ArrayList<>();
-        for (int i = 0; i < maxLength; i++) {
-            result.add(i, (a.getTerms().get(i).multiply(b.getTerms().get(i))).getNumber());
+        int newDegree = 0;
+        for (int i = 0; i < a.getTerms().size(); i++) {
+            for(int j = 0; j < b.getTerms().size(); j++) {
+                int degree = i + j;
+                if (degree > newDegree) {
+                    newDegree = degree;
+                }
+                int coeff = a.getTerms().get(i).getNumber() * b.getTerms().get(j).getNumber();
+                new_coefficients[degree] = coeff + new_coefficients[degree];
+            }
+        }
+        for (int k = 0; k <= newDegree; k++) {
+            result.add(k, new_coefficients[k]);
         }
         return new PolynomialModP(result, modPrime);
     }

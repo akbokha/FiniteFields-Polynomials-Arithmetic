@@ -61,6 +61,16 @@ public class PolynomialModPTest {
     }
     
     @Test
+    public void intModPSum() throws Exception {
+        int modP = 4;
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(-1);
+        IntegerModP zero = new IntegerModP(0, modP);
+        IntegerModP three = new IntegerModP(3, modP);
+        assertEquals(3, zero.add(three).getNumber());  
+    }
+    
+    @Test
     public void intModP2() throws Exception {
         int modP = 4;
         ArrayList<Integer> integers = new ArrayList<>();
@@ -170,6 +180,33 @@ public class PolynomialModPTest {
     public void polyProduct() throws Exception {
         int modP = 4;
         
+        //3X
+        ArrayList<Integer> list3 = new ArrayList<>();
+        list3.add(0);
+        list3.add(3);
+        PolynomialModP poly3 = new PolynomialModP(list3, modP);
+
+        //X^2
+        ArrayList<Integer> list4 = new ArrayList<>();
+        list4.add(0);
+        list4.add(0);
+        list4.add(1);
+        PolynomialModP poly4 = new PolynomialModP(list4, modP);
+
+        //X^2*3X = 3X^3
+        ArrayList<Integer> list5 = new ArrayList<>();
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(3);
+        PolynomialModP poly5 = new PolynomialModP(list5, modP);
+        assertEquals(poly5, poly3.product(poly4));
+    }
+    
+    @Test
+    public void polyProduct2() throws Exception {
+        int modP = 4;
+        
         // - 3x^2 + 7x + 2 results in x^2 + 3x + 2
         ArrayList<Integer> coefficients = new ArrayList<>();
         coefficients.add(2);
@@ -184,36 +221,14 @@ public class PolynomialModPTest {
         PolynomialModP poly2 = new PolynomialModP(coefficients2, modP);
         
         PolynomialModP polyResult = poly1.product(poly2);
-        // (x^2 + 3x + 2) * (3x + 2) should result in 0x^2 + 1x + 0
-        // but it will actually result in 1x + 0, since we remove leading coefficients that are 0
+        // (x^2 + 3x + 2) * (3x + 2) should result in 3x^3 + 3x^2 + 0x + 0
         ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
         coefficientsModP.add(new IntegerModP(0, 4));
-        coefficientsModP.add(new IntegerModP(1, 4));
+        coefficientsModP.add(new IntegerModP(0, 4));
+        coefficientsModP.add(new IntegerModP(3, 4));
+        coefficientsModP.add(new IntegerModP(3, 4));
         assertEquals(coefficientsModP, polyResult.getTerms());
-
-        //3X
-        ArrayList<Integer> list3 = new ArrayList<>();
-        list3.add(0);
-        list3.add(3);
-        PolynomialModP poly3 = new PolynomialModP(list3, modP);
-        System.out.println(poly3);
-
-        //X^2
-        ArrayList<Integer> list4 = new ArrayList<>();
-        list4.add(0);
-        list4.add(0);
-        list4.add(1);
-        PolynomialModP poly4 = new PolynomialModP(list4, modP);
-        System.out.println(poly4);
-
-        //X^2*3X = 3X^3
-        ArrayList<Integer> list5 = new ArrayList<>();
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        list5.add(3);
-        PolynomialModP poly5 = new PolynomialModP(list5, modP);
-        assertEquals(poly5, poly3.product(poly4));
     }
-  
+    
+            
 }
