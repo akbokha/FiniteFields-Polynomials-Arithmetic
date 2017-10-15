@@ -2,3 +2,6 @@
 /nbproject
 /.idea
 /lib
+/build/
+/out/
+*.iml

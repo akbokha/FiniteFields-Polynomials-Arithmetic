@@ -9,46 +9,69 @@ import java.util.ArrayList;
  * @author Remco Surtel
  */
 public class PolynomialModP implements Cloneable {
-    
+    /**
+     * The mod prime of the polynomial
+     */
     private final int modPrime;
+
+    /**
+     * The terms of the polynomial. The degree of the terms are represented by its index.
+     */
     private ArrayList<IntegerModP> terms;
-    private int degree;
-    
-    public PolynomialModP(PolynomialModP copy) {
-        this.modPrime = copy.getModPrime();
-        this.degree = copy.getDegree();
-        ArrayList copyList = new ArrayList<>();
-        for (IntegerModP intmodp : copy.getTerms()) {
-            copyList.add(new IntegerModP(intmodp.getNumber(), modPrime));
-        }
-        this.terms = copyList;
-    }
+
     
     public PolynomialModP(PolynomialModP copy, int modPrime, int degree_difference) {
         this.modPrime = modPrime;
-        this.degree = copy.getDegree();
         ArrayList copyList = new ArrayList<>();
         for (IntegerModP intmodp : copy.getTerms()) {
             copyList.add(intmodp);
         }
-        for (int i = 0; i <= degree_difference; i++) {
-            copyList.add(0);
+        for (int i = 0; i < degree_difference; i++) {
+            copyList.add(new IntegerModP(0, modPrime));
         }
         this.terms = copyList;
     }
 
+    /**
+     * Creates a new polynomial
+     *
+     * @param terms     The terms of the polynomial with index as degree
+     * @param modPrime  The modulus associated with the polynomial
+     */
     public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
         this.modPrime = modPrime;
-        this.terms = takeMod(terms);
-        this.degree = terms.size() - 1;
+        this.terms = takeMod(terms, modPrime);
     }
-    
-    private ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms) {
+
+    /**
+     * Takes the modulus of all coefficients of an integer list and stores them in a {@Link IntegerModP}
+     *
+     * @param terms The terms to take the modulus of
+     * @param mod   The modulus to mod the values with
+     * @return A list of terms with a modulus
+     */
+    public ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod) {
         ArrayList<IntegerModP> coeffModP = new ArrayList<>();
         for (int i : terms) {
-            coeffModP.add(new IntegerModP(i, modPrime));
+            coeffModP.add(new IntegerModP(i, mod));
         }
+        removeLC0(coeffModP);
         return coeffModP;
+    }
+
+    /**
+     * Removes all leading coefficients with a coefficient of 0
+     *
+     * @param coeffModP The terms to remove the coefficients of
+     */
+    public void removeLC0(ArrayList<IntegerModP> coeffModP) {
+        if(coeffModP.size() == 0) {
+            return;
+        }
+        if(coeffModP.get(coeffModP.size()-1).getNumber() == 0) {
+            coeffModP.remove(coeffModP.size()-1);
+            removeLC0(coeffModP);
+        }
     }
 
     /**
@@ -71,22 +94,14 @@ public class PolynomialModP implements Cloneable {
         int maxLength = Math.max(this.terms.size(), added.getTerms().size());
         if (maxLength == this.terms.size()) {
             a = this;
-            b = new PolynomialModP(added, modPrime, (degree - added.getDegree()));
+            b = new PolynomialModP(added, modPrime, (getDegree() - added.getDegree()));
         } else {
-            a = new PolynomialModP(this, modPrime, (added.getDegree() - degree));
+            a = new PolynomialModP(this, modPrime, (added.getDegree() - getDegree()));
             b = added;
         }
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).add(b.getTerms().get(i)));
-        }
-        return new PolynomialModP(result, modPrime);
-    }
-    
-    public PolynomialModP scalarMultiple(int b) {
-        ArrayList result = new ArrayList<>();
-        for (int i = 0; i < this.terms.size(); i++) {
-            result.add(i, new IntegerModP((this.terms.get(i).getNumber() * b), modPrime));
+            result.add(i, (a.getTerms().get(i).add(b.getTerms().get(i))).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -97,32 +112,44 @@ public class PolynomialModP implements Cloneable {
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
         if (maxLength == this.terms.size()) {
             a = this;
-            b = new PolynomialModP(poly, modPrime, (degree - poly.getDegree()));
+            b = new PolynomialModP(poly, modPrime, (getDegree() - poly.getDegree()));
         } else {
-            a = new PolynomialModP(this, modPrime, (poly.getDegree() - degree));
+            a = new PolynomialModP(this, modPrime, (poly.getDegree() - getDegree()));
             b = poly;
         }
         ArrayList result = new ArrayList<>();
         for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)));
+            result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)).getNumber());
         }
         return new PolynomialModP(result, modPrime);
     }
     
     public PolynomialModP product(PolynomialModP poly) {
+        int [] new_coefficients = new int[this.terms.size() + poly.getTerms().size() + 1];
         PolynomialModP a;
         PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
         if (maxLength == this.terms.size()) {
             a = this;
-            b = new PolynomialModP(poly, modPrime, (degree - poly.getDegree()));
+            b = new PolynomialModP(poly, modPrime, (getDegree() - poly.getDegree()));
         } else {
-            a = new PolynomialModP(this, modPrime, (poly.getDegree() - degree));
+            a = new PolynomialModP(this, modPrime, (poly.getDegree() - getDegree()));
             b = poly;
         }
         ArrayList result = new ArrayList<>();
-        for (int i = 0; i < maxLength; i++) {
-            result.add(i, a.getTerms().get(i).multiply(b.getTerms().get(i)));
+        int newDegree = 0;
+        for (int i = 0; i < a.getTerms().size(); i++) {
+            for(int j = 0; j < b.getTerms().size(); j++) {
+                int degree = i + j;
+                if (degree > newDegree) {
+                    newDegree = degree;
+                }
+                int coeff = a.getTerms().get(i).getNumber() * b.getTerms().get(j).getNumber();
+                new_coefficients[degree] = coeff + new_coefficients[degree];
+            }
+        }
+        for (int k = 0; k <= newDegree; k++) {
+            result.add(k, new_coefficients[k]);
         }
         return new PolynomialModP(result, modPrime);
     }
@@ -135,11 +162,11 @@ public class PolynomialModP implements Cloneable {
      * @throws CloneNotSupportedException when {@code this} is not cloneable
      */
     public PolynomialModP product(int number) throws CloneNotSupportedException {
-        PolynomialModP poly = (PolynomialModP) this.clone();
-        for(IntegerModP i : poly.terms) {
-            i.setNumber(i.getNumber() * number);
+        ArrayList<Integer> list = new ArrayList<>();
+        for(IntegerModP i : terms) {
+            list.add(i.getNumber() * number);
         }
-        return poly;
+        return new PolynomialModP(list, modPrime);
     }
 
     /**
@@ -157,10 +184,25 @@ public class PolynomialModP implements Cloneable {
         PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
-            PolynomialModP xrminb = new PolynomialModP(new ArrayList<Integer>(b.degree - r.degree), modPrime);
-            int lcrdivlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
-            q.sum(xrminb.product(lcrdivlcb));
-            q.sum((xrminb.product(lcrdivlcb)).product(b).negate());
+            //Create x^degree(r) - degree(b)
+            ArrayList<Integer> list = new ArrayList<>();
+            for(int i = 0; i < r.getDegree() - b.getDegree(); i++) {
+                list.add(0);
+            }
+            list.add(1);
+            PolynomialModP xrminb = new PolynomialModP(list, modPrime);
+            int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
+            q = q.sum(xrminb.product(lcrDIVlcb));
+
+            System.out.println("b: " + b);
+            System.out.println("X^degree(r)-degree(b) * lc(r)/lc(b) * b: " + (xrminb.product(lcrDIVlcb)));
+
+            r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return new PolynomialModP[]{q, r};
     }
@@ -168,17 +210,67 @@ public class PolynomialModP implements Cloneable {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("");
-        for(int i = terms.size()-1; i >=0; i--) {
-            str.append(terms.get(i).getNumber() + "X^" + i);
+        if(terms.size() != 0) {
+            str.append(termToString(terms.get(terms.size()-1).getNumber(), terms.size()-1, true));
+            for(int i = terms.size()-2; i >= 0; i--) {
+                str.append(termToString(terms.get(i).getNumber(), i, false));
+            }
         }
         return str.toString();
+    }
+
+    /**
+     * Makes a string of a term in the form of ax^b
+     *
+     * @param coef  The coefficient of the term
+     * @param pow   The power of the term
+     * @return A string that represents this term
+     */
+    public String termToString(int coef, int pow, boolean first) {
+        if(coef == 0) {
+            return "";
+        }else if(coef == 1) {
+            if(!first && pow != 0) {
+                return "+" + termToNoCoefString(pow);
+            } else {
+                return termToNoCoefString(pow);
+            }
+        } else if (coef == -1) {
+            if (pow == 0) {
+                return "-1" + termToNoCoefString(pow);
+            } else {
+                return "-" + termToNoCoefString(pow);
+            }
+        } else {
+            if(coef > 0 && !first) {
+                return "+" + coef + termToNoCoefString(pow);
+            } else {
+                return coef + termToNoCoefString(pow);
+            }
+
+        }
+    }
+
+    /**
+     * Makes a string of a term without the coefficient. The input has a for of x^b
+     *
+     * @param pow   The power of the term
+     * @return A string that represents the term without the coefficient
+     */
+    public String termToNoCoefString(int pow) {
+        if(pow == 0) {
+            return "";
+        } else if(pow == 1) {
+            return "X";
+        } else {
+            return "X^" + pow;
+        }
     }
 
     @Override
     public boolean equals(Object o) {
         PolynomialModP that = (PolynomialModP) o;
-        if(modPrime != that.getModPrime() || !terms.equals(that.getTerms()) || degree != that.getDegree()) {
-            System.out.println(" prime was false");
+        if(modPrime != that.getModPrime() || !terms.equals(that.getTerms()) || getDegree() != that.getDegree()) {
             return false;
         }
         return true;
@@ -188,18 +280,32 @@ public class PolynomialModP implements Cloneable {
     public int hashCode() {
         int result = modPrime;
         result = 31 * result + terms.hashCode();
-        result = 31 * result + degree;
         return result;
     }
 
+    /**
+     * Gets the terms of the polynomial
+     *
+     * @return The terms of the polynomial
+     */
     public ArrayList<IntegerModP> getTerms() {
         return this.terms;
     }
-    
+
+    /**
+     * Gets the degree of the polynomial (highest power)
+     *
+     * @return The degree of the polynomial
+     */
     public int getDegree() {
-        return this.degree;
+        return terms.size() - 1;
     }
-    
+
+    /**
+     * Gets the prime mod of the polynomial
+     *
+     * @return The prime mod of the polynomial
+     */
     public int getModPrime() {
         return this.modPrime;
     }
@@ -239,4 +345,7 @@ public class PolynomialModP implements Cloneable {
 
     }
 
+    public int Euclid(PolynomialModP a) throws IllegalArgumentException, CloneNotSupportedException {
+        return 0;
+    }
 }

@@ -24,15 +24,9 @@ public class IntegerModP {
         this.mod = mod;
         this.number = takeMod(number);
     }
-
-    /**
-     * Takes the modulus of an integer
-     *
-     * @param number The number to take the mod of
-     * @return {@code number} modulus {@code mod}
-     */
-    private int takeMod(int number) {
-        return number % mod;
+    
+    private int takeMod(int num) {
+        return (num - this.mod * (Math.floorDiv(num, this.mod)));
     }
 
 
@@ -95,15 +89,15 @@ public class IntegerModP {
         this.mod = mod;
     }
     
-    public IntegerModP add (IntegerModP to_be_added) {
-        return new IntegerModP(takeMod(this.number + to_be_added.getNumber()), mod);
+    public IntegerModP add (IntegerModP add) {
+        return new IntegerModP(this.number + add.getNumber(), mod);
     }
     
-    public IntegerModP multiply (IntegerModP to_be_added) {
-        return new IntegerModP(takeMod(this.number * to_be_added.getNumber()), mod);
+    public IntegerModP multiply (IntegerModP add) {
+        return new IntegerModP(this.number * add.getNumber(), mod);
     }
     
-    public IntegerModP subtract (IntegerModP to_be_added) {
-        return new IntegerModP(takeMod(this.number - to_be_added.getNumber()), mod);
+    public IntegerModP subtract (IntegerModP add) {
+        return new IntegerModP(this.number - add.getNumber(), mod);
     }
 }
