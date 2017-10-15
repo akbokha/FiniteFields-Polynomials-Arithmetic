@@ -22,7 +22,11 @@ public class IntegerModP {
      */
     public IntegerModP(int number, int mod) {
         this.mod = mod;
-        this.number = number % mod;
+        this.number = takeMod(number);
+    }
+    
+    private int takeMod(int num) {
+        return (num - this.mod * (Math.floorDiv(num, this.mod)));
     }
 
 

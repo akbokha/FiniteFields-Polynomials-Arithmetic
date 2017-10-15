@@ -69,7 +69,7 @@ public class PolynomialModPTest {
     }
 
     @Test
-    public void product() throws Exception {
+    public void scalarMultiple() throws Exception {
         int mod1 = 3;
         int multiplier = 6;
 
@@ -87,10 +87,28 @@ public class PolynomialModPTest {
         list2.add(multiplier * 7);
         PolynomialModP poly2 = new PolynomialModP(list2, mod1);
 
-        assertEquals(poly1.product(multiplier), poly2);
+        assertEquals(poly1.scalarMultiple(multiplier), poly2);
+    }
+    
+    @Test
+    public void intModP() throws Exception {
+        int modP = 4;
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(-1);
+        IntegerModP minusInteger = new IntegerModP(-1, modP);
+        assertEquals(3, minusInteger.getNumber());  
+    }
+    
+    @Test
+    public void intModP2() throws Exception {
+        int modP = 4;
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(1);
+        IntegerModP minusInteger = new IntegerModP(1, modP);
+        assertEquals(1, minusInteger.getNumber());  
     }
 
-    @Test
+    /*@Test
     public void longDivision() throws Exception {
         int mod1 = 3;
 
@@ -118,6 +136,6 @@ public class PolynomialModPTest {
 
         assertEquals(toTestPoly1.longDivision(toTestPoly2)[0], expectedQuotientPoly);
         assertEquals(toTestPoly1.longDivision(toTestPoly2)[1], expectedRemainderPoly);
-    }
-
+    }*/
+  
 }
