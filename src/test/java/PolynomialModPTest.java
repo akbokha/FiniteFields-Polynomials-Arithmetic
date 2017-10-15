@@ -137,5 +137,101 @@ public class PolynomialModPTest {
         assertEquals(toTestPoly1.longDivision(toTestPoly2)[0], expectedQuotientPoly);
         assertEquals(toTestPoly1.longDivision(toTestPoly2)[1], expectedRemainderPoly);
     }*/
+    
+    @Test
+    public void polyConstruction() throws Exception {
+        int modP = 4;
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        coefficients.add(2);
+        coefficients.add(7);
+        coefficients.add(-3);
+        PolynomialModP poly = new PolynomialModP(coefficients, modP);
+        ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
+        coefficientsModP.add(new IntegerModP(2, 4));
+        coefficientsModP.add(new IntegerModP(7, 4));
+        coefficientsModP.add(new IntegerModP(-3, 4));
+        for (IntegerModP i : coefficientsModP) {
+            System.out.println(i.getNumber());
+        }
+        assertEquals(coefficientsModP, poly.getTerms());  
+    }
+    
+    @Test
+    public void polySum() throws Exception {
+        int modP = 4;
+        
+        // - 3x^2 + 7x + 2 results in x^2 + 3x + 2
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        coefficients.add(2);
+        coefficients.add(7);
+        coefficients.add(-3);
+        PolynomialModP poly1 = new PolynomialModP(coefficients, modP);
+        
+        // -9x + 6 results in 3x + 2
+        ArrayList<Integer> coefficients2 = new ArrayList<>();
+        coefficients2.add(6);
+        coefficients2.add(-9);
+        PolynomialModP poly2 = new PolynomialModP(coefficients2, modP);
+        
+        PolynomialModP polyResult = poly1.sum(poly2);
+        // (x^2 + 3x + 2) + (3x + 2) should result in x^2 + 2x + 0
+        ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
+        coefficientsModP.add(new IntegerModP(0, 4));
+        coefficientsModP.add(new IntegerModP(2, 4));
+        coefficientsModP.add(new IntegerModP(1, 4));
+        assertEquals(coefficientsModP, polyResult.getTerms());  
+    }
+    
+    @Test
+    public void polyDifference() throws Exception {
+        int modP = 4;
+        
+        // - 3x^2 + 7x + 2 results in x^2 + 3x + 2
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        coefficients.add(2);
+        coefficients.add(7);
+        coefficients.add(-3);
+        PolynomialModP poly1 = new PolynomialModP(coefficients, modP);
+        
+        // -9x + 6 results in 3x + 2
+        ArrayList<Integer> coefficients2 = new ArrayList<>();
+        coefficients2.add(6);
+        coefficients2.add(-9);
+        PolynomialModP poly2 = new PolynomialModP(coefficients2, modP);
+        
+        PolynomialModP polyResult = poly1.difference(poly2);
+        // (x^2 + 3x + 2) - (3x + 2) should result in x^2 + 0x + 0
+        ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
+        coefficientsModP.add(new IntegerModP(0, 4));
+        coefficientsModP.add(new IntegerModP(0, 4));
+        coefficientsModP.add(new IntegerModP(1, 4));
+        assertEquals(coefficientsModP, polyResult.getTerms());  
+    }
+    
+    @Test
+    public void polyProduct() throws Exception {
+        int modP = 4;
+        
+        // - 3x^2 + 7x + 2 results in x^2 + 3x + 2
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        coefficients.add(2);
+        coefficients.add(7);
+        coefficients.add(-3);
+        PolynomialModP poly1 = new PolynomialModP(coefficients, modP);
+        
+        // -9x + 6 results in 3x + 2
+        ArrayList<Integer> coefficients2 = new ArrayList<>();
+        coefficients2.add(6);
+        coefficients2.add(-9);
+        PolynomialModP poly2 = new PolynomialModP(coefficients2, modP);
+        
+        PolynomialModP polyResult = poly1.product(poly2);
+        // (x^2 + 3x + 2) * (3x + 2) should result in 0x^2 + 1x + 0
+        // but it will actually result in 1x + 0, since we remove leading coefficients that are 0
+        ArrayList<IntegerModP> coefficientsModP = new ArrayList<>();
+        coefficientsModP.add(new IntegerModP(0, 4));
+        coefficientsModP.add(new IntegerModP(1, 4));
+        assertEquals(coefficientsModP, polyResult.getTerms());  
+    }
   
 }
