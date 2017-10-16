@@ -287,6 +287,51 @@ public class PolynomialModPTest {
         PolynomialModP gcd = new PolynomialModP(coeff3, modP);
         assertEquals(a.polyGCD(d), gcd);
     }
-    
+
+    @Test
+    public void ExtEuclid() throws Exception {
+        int modP = 10;
+
+        // extended gcd(x^2, 2x^3 + x) --> gcd(x^2, 2x^3 + x) = x = 8x * x^2 + 1 * 2x^3 + x
+
+        // a = x^2
+        ArrayList<Integer> coefficientsA = new ArrayList<>();
+        coefficientsA.add(0);
+        coefficientsA.add(0);
+        coefficientsA.add(1);
+        PolynomialModP a = new PolynomialModP(coefficientsA, modP);
+        System.out.println("Polynomial a: " + a.toString());
+
+        // b = 2x^3 + x
+        ArrayList<Integer> coefficientsB = new ArrayList<>();
+        coefficientsB.add(0);
+        coefficientsB.add(1);
+        coefficientsB.add(0);
+        coefficientsB.add(2);
+        PolynomialModP b = new PolynomialModP(coefficientsB, modP);
+        System.out.println("Polynomial b: " + b.toString());
+
+        //expected answer x = 8x
+        ArrayList<Integer> coefficientsX = new ArrayList<>();
+        coefficientsX.add(0);
+        coefficientsX.add(8);
+        PolynomialModP expX = new PolynomialModP(coefficientsX, modP);
+        System.out.println("Expected polynomial x: " + expX.toString());
+
+        //expected answer y = 1
+        ArrayList<Integer> coefficientsY = new ArrayList<>();
+        coefficientsY.add(1);
+        PolynomialModP expY = new PolynomialModP(coefficientsY, modP);
+        System.out.println("Expected polynomial y: " + expY.toString());
+
+        ArrayList<PolynomialModP> result = a.ExtEuclid(b);
+        PolynomialModP x = result.get(0);
+        System.out.println("Result x: " + x.toString());
+        PolynomialModP y = result.get(1);
+        System.out.println("Result y: " + y.toString());
+        assertEquals(x, expX);
+        assertEquals(y, expY);
+
+    }
             
 }

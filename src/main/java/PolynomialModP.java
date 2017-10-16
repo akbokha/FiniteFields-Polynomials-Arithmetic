@@ -312,12 +312,13 @@ public class PolynomialModP implements Cloneable {
      * Given two polynomials mod p, a and b, this algorithm outputs two polynomials x and y with gcd(a, b) = xa + yb.
      * See algorithm 1.2.11 from lecture notes.
      *
-     * @param a Polynomial mod p
      * @param b Polynomial mod p
      * @throws IllegalArgumentException if {@code a == null || b == null || a.modP != b.modP}
      * @return Polynomials x, y, such that gcd(a, b) = xa + yb
      */
-    public Pair<PolynomialModP, PolynomialModP> ExtEuclid(PolynomialModP a, PolynomialModP b){
+    public ArrayList<PolynomialModP> ExtEuclid(PolynomialModP b) throws CloneNotSupportedException {
+
+        PolynomialModP a = (PolynomialModP) this.clone();
 
         if(a == null || b == null){
             throw new IllegalArgumentException("The polynomials cannot be null.");
@@ -326,8 +327,8 @@ public class PolynomialModP implements Cloneable {
             throw new IllegalArgumentException("The polynomials must have the same modulus.");
         }
 
-        ArrayList<Integer> l = new ArrayList<>(1);
-        l.set(0,1);
+        ArrayList<Integer> l = new ArrayList();
+        l.add(0,1);
         PolynomialModP x = new PolynomialModP(l, a.getModPrime());
         PolynomialModP v = new PolynomialModP(l, a.getModPrime());
         l.set(0,0);
@@ -336,10 +337,23 @@ public class PolynomialModP implements Cloneable {
         PolynomialModP zero = new PolynomialModP(l, a.getModPrime());
 
         while(!(b.equals(zero))){
-            //TODO: Calculate x, y
+            PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
+            PolynomialModP q = longDiv[0]; // q = quot(a,b)
+            a = (PolynomialModP) b.clone();
+            b = longDiv[1]; // b = rem(a,b)
+            PolynomialModP x2 = (PolynomialModP) x.clone();
+            PolynomialModP y2 = (PolynomialModP) y.clone();
+            x = (PolynomialModP) u.clone();
+            y = (PolynomialModP) v.clone();
+            u = x2.difference(q.product(u));
+            v = y2.difference(q.product(v));
         }
 
-        return new Pair<>(x, y);
+        ArrayList<PolynomialModP> result = new ArrayList<>();
+        result.add(0, x);
+        result.add(1, y);
+        return result;
+
     }
     
     public PolynomialModP polyGCD (PolynomialModP y) {
