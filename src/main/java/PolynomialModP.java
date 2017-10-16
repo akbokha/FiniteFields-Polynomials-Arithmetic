@@ -184,7 +184,6 @@ public class PolynomialModP implements Cloneable {
         PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
-            //Create x^degree(r) - degree(b)
             ArrayList<Integer> list = new ArrayList<>();
             for(int i = 0; i < r.getDegree() - b.getDegree(); i++) {
                 list.add(0);
@@ -193,16 +192,7 @@ public class PolynomialModP implements Cloneable {
             PolynomialModP xrminb = new PolynomialModP(list, modPrime);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
             q = q.sum(xrminb.product(lcrDIVlcb));
-
-            System.out.println("b: " + b);
-            System.out.println("X^degree(r)-degree(b) * lc(r)/lc(b) * b: " + (xrminb.product(lcrDIVlcb)));
-
             r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         return new PolynomialModP[]{q, r};
     }
@@ -230,14 +220,22 @@ public class PolynomialModP implements Cloneable {
         if(coef == 0) {
             return "";
         }else if(coef == 1) {
-            if(!first && pow != 0) {
-                return "+" + termToNoCoefString(pow);
+            if(first) {
+                if(pow == 0) {
+                    return "1";
+                } else {
+                    return termToNoCoefString(pow);
+                }
             } else {
-                return termToNoCoefString(pow);
+                if(pow == 0) {
+                    return "+1";
+                } else {
+                    return "+" + termToNoCoefString(pow);
+                }
             }
         } else if (coef == -1) {
-            if (pow == 0) {
-                return "-1" + termToNoCoefString(pow);
+            if(pow == 0) {
+                return "-1";
             } else {
                 return "-" + termToNoCoefString(pow);
             }

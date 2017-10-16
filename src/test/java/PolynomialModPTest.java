@@ -79,35 +79,66 @@ public class PolynomialModPTest {
         assertEquals(1, minusInteger.getNumber());  
     }
 
-    /*@Test
+    @Test
     public void longDivision() throws Exception {
-        int mod1 = 11;
+        int mod1 = 2;
 
         ArrayList<Integer> toTestList1 = new ArrayList<>();
-        toTestList1.add(-3);
-        toTestList1.add(10);
-        toTestList1.add(-5);
-        toTestList1.add(3);
+        toTestList1.add(1);
+        toTestList1.add(0);
+        toTestList1.add(0);
+        toTestList1.add(1);
         PolynomialModP toTestPoly1 = new PolynomialModP(toTestList1, mod1);
 
         ArrayList<Integer> toTestList2 = new ArrayList<>();
         toTestList2.add(1);
-        toTestList2.add(3);
+        toTestList2.add(1);
+        toTestList2.add(1);
         PolynomialModP toTestPoly2 = new PolynomialModP(toTestList2, mod1);
 
         ArrayList<Integer> expectedRemainderList1 = new ArrayList<>();
-        expectedRemainderList1.add(4);
-        expectedRemainderList1.add(-2);
-        expectedRemainderList1.add(1);
-        PolynomialModP expectedRemainderPoly = new PolynomialModP(expectedRemainderList1, mod1);
+        expectedRemainderList1.add(0);
+        PolynomialModP expectedRemainderPoly1 = new PolynomialModP(expectedRemainderList1, mod1);
 
         ArrayList<Integer> expectedQuotientList1 = new ArrayList<>();
-        expectedQuotientList1.add(-7);
-        PolynomialModP expectedQuotientPoly = new PolynomialModP(expectedQuotientList1, mod1);
+        expectedQuotientList1.add(1);
+        expectedQuotientList1.add(1);
+        PolynomialModP expectedQuotientPoly1 = new PolynomialModP(expectedQuotientList1, mod1);
 
-        assertEquals(toTestPoly1.longDivision(toTestPoly2)[0], expectedQuotientPoly);
-        assertEquals(toTestPoly1.longDivision(toTestPoly2)[1], expectedRemainderPoly);
-    }*/
+        assertEquals(toTestPoly1.longDivision(toTestPoly2)[0], expectedQuotientPoly1);
+        assertEquals(toTestPoly1.longDivision(toTestPoly2)[1], expectedRemainderPoly1);
+
+        int mod2 = 7;
+        ArrayList<Integer> toTestList3 = new ArrayList<>();
+        toTestList3.add(1);
+        toTestList3.add(0);
+        toTestList3.add(1);
+        toTestList3.add(1);
+        toTestList3.add(3);
+        toTestList3.add(6);
+        PolynomialModP toTestPoly3 = new PolynomialModP(toTestList3, mod2);
+
+        ArrayList<Integer> toTestList4 = new ArrayList<>();
+        toTestList4.add(6);
+        toTestList4.add(5);
+        toTestList4.add(3);
+        PolynomialModP toTestPoly4 = new PolynomialModP(toTestList4, mod2);
+
+        ArrayList<Integer> expectedRemainderList2 = new ArrayList<>();
+        expectedRemainderList2.add(2);
+        expectedRemainderList2.add(3);
+        PolynomialModP expectedRemainderPoly2 = new PolynomialModP(expectedRemainderList2, mod2);
+
+        ArrayList<Integer> expectedQuotientList2 = new ArrayList<>();
+        expectedQuotientList2.add(1);
+        expectedQuotientList2.add(1);
+        expectedQuotientList2.add(0);
+        expectedQuotientList2.add(2);
+        PolynomialModP expectedQuotientPoly2 = new PolynomialModP(expectedQuotientList2, mod2);
+
+        assertEquals(toTestPoly3.longDivision(toTestPoly4)[0], expectedQuotientPoly2);
+        assertEquals(toTestPoly3.longDivision(toTestPoly4)[1], expectedRemainderPoly2);
+    }
     
     @Test
     public void polyConstruction() throws Exception {
