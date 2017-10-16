@@ -23,7 +23,7 @@ public class Main {
                 " polynomials\n"
                 + "2: Produces the quotient and remainder of two polynomials (Long division)\n"
                 + "3: Executes the (Extended) Euclidean algorithm for polynomials\n"
-                + "4: Checks whether tow polynomials in the mod p setting are equal modulo a third polynomial\n"
+                + "4: Checks whether two polynomials in the mod p setting are equal modulo a third polynomial\n"
                 + "5: Produces the addition and multiplication table of the field Z/p[X]/ q(X) of polynomial q(X)\n"
                 + "6: Upon input of two field elements a and b, produces the sum (a+b), " +
                 "product (a*b) and the quotient (a*b^-1)\n"
@@ -115,11 +115,13 @@ public class Main {
                     ArrayList<Integer> pol1 = extractPol(p1);
                     String p2 = sc.nextLine();
                     ArrayList<Integer> pol2 = extractPol(p2);
+                    System.out.println("Please enter a third polynomial (the modulo)"+ polynomialForm);
+                    String p3 = sc.nextLine();
+                    ArrayList<Integer> pol3 = extractPol(p3);
+                    computeCongruenceMod(pol1, pol2, pol3, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
-                System.out.println("Please enter a third polynomial (the modulo)"+ polynomialForm);
-                String p3 = sc.nextLine();
             } else if (choice.equals("5")) {
                 //input: prime p and irreducible polynomial q(x)
                 //output: addition and multiplication table of the field
@@ -127,32 +129,62 @@ public class Main {
                 try {
                     System.out.println("Please enter a prime number");
                     int prime = Integer.parseInt(sc.nextLine());
+                    System.out.println("Please enter an irreducible polynomial"+polynomialForm);
+                    String p1 = sc.nextLine();
+                    ArrayList<Integer> pol1 = extractPol(p1);
+                    computeAddMulTable(pol1, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
-                System.out.println("Please enter an irreducible polynomial"+polynomialForm);
                 //produce addition and multiplication table of the field
             } else if (choice.equals("6")) {
                 //input: two field elements a and b
                 //output: a+b, a*b, a*b^-1 (if b!=0)
                 //function: ext. eucld. algo for b^-1, and ....
-                System.out.println("Please enter two field elements a and b in the form: [tbd]");
-                String field1 = sc.nextLine();
-                String field2 = sc.nextLine();
-
+                System.out.println("please enter a prime number");
+                int prime = Integer.parseInt(sc.nextLine());
+                System.out.println("Please enter two field elements a and b in the form:"+polynomialForm);
+                String f1 = sc.nextLine();
+                String f2 = sc.nextLine();
+                ArrayList<Integer> field1 = extractPol(f1);
+                ArrayList<Integer> field2 = extractPol(f2);
+                //computeSumFields(field1, field2, prime);
+                //computeProductFields(field1, field2, prime);
+                //computeProductInverse(field1, field2, prime);
             } else if (choice.equals("7")) {
                 //input: field element
                 //output: check primitivy of a field element
                 //function: algo 3.4.3, 3.4.4
+                System.out.println("please enter a prime number");
+                int prime = Integer.parseInt(sc.nextLine());
                 System.out.println("Please enter a field F of order q " +
-                        "and prime divisors p1,...,pk of q-e and a in F in the form: [tbd]");
-                String field = sc.nextLine();
+                        "and prime divisors p1,...,pk of q-e and a in F in the form:"+polynomialForm);
+                String f1 = sc.nextLine();
+                ArrayList<Integer> field1 = extractPol(f1);
+                computePrimitive(field1, prime);
             }
         } catch (NumberFormatException e) {
             System.out.println(e);
         } catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    private static void computePrimitive(ArrayList<Integer> field1, int prime) {
+        PolynomialModP f1 = new PolynomialModP(field1, prime);
+        /* TO DO call primitive instance */
+    }
+
+    private static void computeAddMulTable(ArrayList<Integer> pol1, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        //System.out.println("the addition and multiplication table of "+pol1+" (mod) "+prime+" is: "+p1.AddMulTable(prime));
+    }
+
+    private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p3 = new PolynomialModP(pol3, prime);
+        //System.out.println(p1 + " and "+p2+"are congruent modulo "+p3);
     }
 
     private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
@@ -175,7 +207,7 @@ public class Main {
 
     private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) = "+p1.product(numberScalarM));
+        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) "+prime+"= "+p1.product(numberScalarM));
     }
 
     private static void computeProduct(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
