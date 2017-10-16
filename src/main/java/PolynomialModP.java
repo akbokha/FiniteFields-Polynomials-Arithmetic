@@ -125,7 +125,7 @@ public class PolynomialModP implements Cloneable {
     }
     
     public PolynomialModP product(PolynomialModP poly) {
-        int [] new_coefficients = new int[this.terms.size() + poly.getTerms().size() + 1];
+        int [] new_coefficients = new int[2* (this.terms.size() + poly.getTerms().size()) + 1];
         PolynomialModP a;
         PolynomialModP b;
         int maxLength = Math.max(this.terms.size(), poly.getTerms().size());
