@@ -356,11 +356,11 @@ public class PolynomialModP implements Cloneable {
 
     }
     
-    public PolynomialModP polyGCD (PolynomialModP y) {
+    public PolynomialModP polyGCD (PolynomialModP y) throws CloneNotSupportedException {
         PolynomialModP x = this;
-        Pair<PolynomialModP, PolynomialModP> result = ExtEuclid(x, y);
-        PolynomialModP a = result.getKey();
-        PolynomialModP b = result.getValue();
+        ArrayList<PolynomialModP> result = x.ExtEuclid(y);
+        PolynomialModP a = result.get(0);
+        PolynomialModP b = result.get(1);
         // return gcd(x, y) = ax + by
         return (a.product(x)).sum(b.product(y));
     }
