@@ -342,7 +342,8 @@ public class PolynomialModP implements Cloneable {
         return new Pair<>(x, y);
     }
     
-    public PolynomialModP polyGCD (PolynomialModP x, PolynomialModP y) {
+    public PolynomialModP polyGCD (PolynomialModP y) {
+        PolynomialModP x = this;
         Pair<PolynomialModP, PolynomialModP> result = ExtEuclid(x, y);
         PolynomialModP a = result.getKey();
         PolynomialModP b = result.getValue();

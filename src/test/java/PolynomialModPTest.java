@@ -261,5 +261,32 @@ public class PolynomialModPTest {
         assertEquals(coefficientsModP, polyResult.getTerms());
     }
     
+    @Test
+    public void polyGCD() throws Exception {
+        // considering K[X}/(x^2+1)
+        int modP = 10;
+        
+        // x^2+1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1);
+        coeff.add(0);
+        coeff.add(1);
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+        
+        // x^3
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1);
+        PolynomialModP a = new PolynomialModP(coeff2, modP);
+        
+        // 1
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(1);
+        PolynomialModP gcd = new PolynomialModP(coeff3, modP);
+        assertEquals(a.polyGCD(d), gcd);
+    }
+    
             
 }
