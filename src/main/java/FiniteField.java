@@ -61,8 +61,18 @@ public class FiniteField {
         return longdivResult[1]; // return remainder
     }
     
-    public PolynomialModP inverse(PolynomialModP poly) {
-        return null;
+    public PolynomialModP inverse(PolynomialModP poly) throws CloneNotSupportedException {
+        PolynomialModP result = null; // if there is no inverse, return null
+        
+        ArrayList<Integer> constant = new ArrayList<>();
+        constant.add(1);
+        PolynomialModP one = new PolynomialModP(constant, modP, true);
+        
+        // xa + yd = gcd(a,d) where a = poly and d = this.polynomial
+        if(one.equals(poly.polyGCD(this.polynomial))) { // gcd (a,d) == 1
+            result = poly.ExtEuclid(this.polynomial).get(0); // return x
+        } // else: a = poly is not invertible
+        return result;
     }
     
     public PolynomialModP sum(PolynomialModP a, PolynomialModP b) {
