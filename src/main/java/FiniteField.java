@@ -80,8 +80,9 @@ public class FiniteField {
         return takeMod(result);
     }
     
-    public PolynomialModP quotient(PolynomialModP a, PolynomialModP b) {
-        return null;
+    public PolynomialModP quotient(PolynomialModP a, PolynomialModP b) throws CloneNotSupportedException {
+        PolynomialModP result = a.product(inverse(b));
+        return takeMod(result);
     }
     
     public PolynomialModP product(PolynomialModP a, PolynomialModP b) {
