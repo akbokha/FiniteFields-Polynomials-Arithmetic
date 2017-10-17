@@ -1,7 +1,8 @@
-import org.testng.annotations.Test;
+import org.junit.Test;
+
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import static org.junit.Assert.*;
 
 public class PolynomialModPTest {
     @Test
