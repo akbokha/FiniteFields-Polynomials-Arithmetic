@@ -14,12 +14,39 @@ public class FiniteField {
         this.polynomial = poly;
         this.modP = modP;
     }
-    
-    // needed for addition/multiplication table @Joris
-    private ArrayList<PolynomialModP> findElements() {
-        ArrayList field_elements = new ArrayList<>();
-        // find elements and add them to field_elements
+
+    /**
+     * Function to find all elements in a given field.
+     *
+     * @return field_elements: ArrayList of PolynomialModP's, that contains all elements of the given field.
+     */
+    public ArrayList<PolynomialModP> findElements() {
+
+        FiniteField field = this; //given field
+
+        ArrayList<PolynomialModP> field_elements = new ArrayList<>(); // initialize ArrayList to be returned
+        ArrayList<Integer> terms = new ArrayList<>();
+        for(int i = 0; i < field.polynomial.getDegree(); i++){terms.add(0);} // initialize ArrayList with 0s
+
+        field_elements = generateElements(field, field_elements, terms, field.polynomial.getDegree() - 1);
+
         return field_elements;
+    }
+
+    public ArrayList<PolynomialModP> generateElements(FiniteField field, ArrayList<PolynomialModP> field_elements, ArrayList<Integer> terms, int index){
+
+        for(int i = 0; i < field.modP; i++){ //for all possible numbers
+            terms.set(index, i); //set the number at given index to i
+            if(index == 0){ // if index = 0, add this polynomial to the elements
+                field_elements.add(new PolynomialModP(terms, field.modP, false));
+            }
+            else{ // if index != 0, recurse
+                field_elements = generateElements(field, field_elements, terms, index - 1);
+            }
+        }
+
+        return field_elements; // return the final result
+
     }
     
     // needed for 2.4.2

@@ -38,10 +38,23 @@ public class PolynomialModP implements Cloneable {
      * @param terms     The terms of the polynomial with index as degree
      * @param modPrime  The modulus associated with the polynomial
      */
-    public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
+    public PolynomialModP(ArrayList<Integer> terms, int modPrime, boolean removeLeading0s) {
         this.modPrime = modPrime;
-        this.terms = takeMod(terms, modPrime);
+        this.terms = takeMod(terms, modPrime, removeLeading0s);
     }
+
+    /*public PolynomialModP(ArrayList<Integer> terms, int modPrime, int unneededArgument) {
+        this.modPrime = modPrime;
+        for(int i = this.terms.size() - 1; i > 0; i--){
+            if( this.terms.get(i) != 0 ){
+                break;
+            }
+            else{
+                this.terms.remove(i);
+            }
+        }
+        this.terms = takeMod2(terms, modPrime);
+    }*/
 
     /**
      * Takes the modulus of all coefficients of an integer list and stores them in a {@Link IntegerModP}
@@ -50,12 +63,12 @@ public class PolynomialModP implements Cloneable {
      * @param mod   The modulus to mod the values with
      * @return A list of terms with a modulus
      */
-    public ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod) {
+    public ArrayList<IntegerModP> takeMod(ArrayList<Integer> terms, int mod, boolean removeLeading0s) {
         ArrayList<IntegerModP> coeffModP = new ArrayList<>();
         for (int i : terms) {
             coeffModP.add(new IntegerModP(i, mod));
         }
-        removeLC0(coeffModP);
+        if(removeLeading0s){ removeLC0(coeffModP); }
         return coeffModP;
     }
 
@@ -103,7 +116,7 @@ public class PolynomialModP implements Cloneable {
         for (int i = 0; i < maxLength; i++) {
             result.add(i, (a.getTerms().get(i).add(b.getTerms().get(i))).getNumber());
         }
-        return new PolynomialModP(result, modPrime);
+        return new PolynomialModP(result, modPrime, true);
     }
     
     public PolynomialModP difference(PolynomialModP poly) {
@@ -121,7 +134,7 @@ public class PolynomialModP implements Cloneable {
         for (int i = 0; i < maxLength; i++) {
             result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)).getNumber());
         }
-        return new PolynomialModP(result, modPrime);
+        return new PolynomialModP(result, modPrime, true);
     }
     
     public PolynomialModP product(PolynomialModP poly) {
@@ -151,7 +164,7 @@ public class PolynomialModP implements Cloneable {
         for (int k = 0; k <= newDegree; k++) {
             result.add(k, new_coefficients[k]);
         }
-        return new PolynomialModP(result, modPrime);
+        return new PolynomialModP(result, modPrime, true);
     }
 
     /**
@@ -166,7 +179,7 @@ public class PolynomialModP implements Cloneable {
         for(IntegerModP i : terms) {
             list.add(i.getNumber() * number);
         }
-        return new PolynomialModP(list, modPrime);
+        return new PolynomialModP(list, modPrime, true);
     }
 
     /**
@@ -181,7 +194,7 @@ public class PolynomialModP implements Cloneable {
         if(b == null) {
             throw new IllegalArgumentException("The polynomial parameter must not be null");
         }
-        PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
+        PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime, true);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
             ArrayList<Integer> list = new ArrayList<>();
@@ -189,7 +202,7 @@ public class PolynomialModP implements Cloneable {
                 list.add(0);
             }
             list.add(1);
-            PolynomialModP xrminb = new PolynomialModP(list, modPrime);
+            PolynomialModP xrminb = new PolynomialModP(list, modPrime, true);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
             q = q.sum(xrminb.product(lcrDIVlcb));
             r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
@@ -199,13 +212,16 @@ public class PolynomialModP implements Cloneable {
 
     @Override
     public String toString() {
+        PolynomialModP poly = new PolynomialModP(this.getTermsInt(), modPrime, true);
         StringBuilder str = new StringBuilder("");
-        if(terms.size() != 0) {
-            str.append(termToString(terms.get(terms.size()-1).getNumber(), terms.size()-1, true));
-            for(int i = terms.size()-2; i >= 0; i--) {
-                str.append(termToString(terms.get(i).getNumber(), i, false));
+        if(poly.getTerms().size() != 0) {
+            str.append(termToString(poly.getTerms().get(poly.getTerms().size() - 1).getNumber(), poly.getTerms().size() - 1, true));
+            for (int i = poly.getTerms().size() - 2; i >= 0; i--) {
+                str.append(termToString(poly.getTerms().get(i).getNumber(), i, false));
             }
         }
+        else{ return "0"; }
+
         return str.toString();
     }
 
@@ -290,6 +306,14 @@ public class PolynomialModP implements Cloneable {
         return this.terms;
     }
 
+    public ArrayList<Integer> getTermsInt() {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < terms.size(); i++){
+            list.add(terms.get(i).getNumber());
+        }
+        return list;
+    }
+
     /**
      * Gets the degree of the polynomial (highest power)
      *
@@ -329,12 +353,12 @@ public class PolynomialModP implements Cloneable {
 
         ArrayList<Integer> l = new ArrayList();
         l.add(0,1);
-        PolynomialModP x = new PolynomialModP(l, a.getModPrime());
-        PolynomialModP v = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP x = new PolynomialModP(l, a.getModPrime(), true);
+        PolynomialModP v = new PolynomialModP(l, a.getModPrime(), true);
         l.set(0,0);
-        PolynomialModP y = new PolynomialModP(l, a.getModPrime());
-        PolynomialModP u = new PolynomialModP(l, a.getModPrime());
-        PolynomialModP zero = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP y = new PolynomialModP(l, a.getModPrime(), true);
+        PolynomialModP u = new PolynomialModP(l, a.getModPrime(),true);
+        PolynomialModP zero = new PolynomialModP(l, a.getModPrime(), true);
 
         while(!(b.equals(zero))){
             PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
@@ -367,5 +391,10 @@ public class PolynomialModP implements Cloneable {
 
     public int Euclid(PolynomialModP a) throws IllegalArgumentException, CloneNotSupportedException {
         return 0;
+    }
+
+    public PolynomialModP getClone() throws CloneNotSupportedException {
+        PolynomialModP poly = (PolynomialModP) this.clone();
+        return poly;
     }
 }
