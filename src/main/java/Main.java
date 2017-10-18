@@ -132,8 +132,7 @@ public class Main {
                     System.out.println("Please enter an irreducible polynomial"+polynomialForm);
                     String p1 = sc.nextLine();
                     ArrayList<Integer> pol1 = extractPol(p1);
-                    PolynomialModP polMod = new PolynomialModP(pol1, prime);
-                    computeAddMulTable(pol1, polMod, prime);
+                    computeAddMulTable(pol1, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
@@ -172,73 +171,60 @@ public class Main {
     }
 
     private static void computePrimitive(ArrayList<Integer> field1, int prime) {
-        PolynomialModP f1 = new PolynomialModP(field1, prime);
+        PolynomialModP f1 = new PolynomialModP(field1, prime, true);
         /* TO DO call primitive instance */
     }
 
-    private static void computeAddMulTable(ArrayList<Integer> pol1, PolynomialModP polMod, int prime) throws CloneNotSupportedException {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-
-        FiniteField f1 = new FiniteField(p1, prime);
-        int order = (int) Math.pow(p1.getModPrime(),p1.getDegree());
-        /*
-        PolynomialModP[][] result = f1.AddMulTable();
-        for (int i = 0; i < order; i++) {
-            for (int j = 0; j < order; j++) {
-                System.out.print(result[i][j]);
-                System.out.print(" \t");
-            }
-        }
-        */
+    private static void computeAddMulTable(ArrayList<Integer> pol1, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         //System.out.println("the addition and multiplication table of "+pol1+" (mod) "+prime+" is: "+p1.AddMulTable(prime));
     }
 
-
     private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
-        PolynomialModP p3 = new PolynomialModP(pol3, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
+        PolynomialModP p3 = new PolynomialModP(pol3, prime, true );
         //System.out.println(p1 + " and "+p2+"are congruent modulo "+p3);
     }
 
-    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         //System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1+"*a + "+p2+"*b = "+ p1.ExtEuclid(p2));
     }
 
     private static void computeEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1.Euclid(p2));
     }
 
     private static void computeLongDivision(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true );
         System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" = "+p1.longDivision(p2));
     }
 
     private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) throws CloneNotSupportedException {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) "+prime+"= "+p1.product(numberScalarM));
     }
 
     private static void computeProduct(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         System.out.println("The product of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.product(p2));
     }
 
     private static void computeDiff(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         System.out.println("The difference of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.difference(p2));
     }
 
     private static void computeSum(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime);
-        PolynomialModP p2 = new PolynomialModP(pol2, prime);
+        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
+        PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         System.out.println("The sum of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.sum(p2));
     }
 
