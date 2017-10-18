@@ -355,7 +355,7 @@ public class PolynomialModP implements Cloneable {
         return result;
 
     }
-    
+    /*
     public PolynomialModP polyGCD (PolynomialModP y) {
         PolynomialModP x = this;
         Pair<PolynomialModP, PolynomialModP> result = ExtEuclid(x, y);
@@ -364,7 +364,7 @@ public class PolynomialModP implements Cloneable {
         // return gcd(x, y) = ax + by
         return (a.product(x)).sum(b.product(y));
     }
-
+    */
     public int Euclid(PolynomialModP a) throws IllegalArgumentException, CloneNotSupportedException {
         return 0;
     }

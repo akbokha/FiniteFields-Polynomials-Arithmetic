@@ -132,7 +132,8 @@ public class Main {
                     System.out.println("Please enter an irreducible polynomial"+polynomialForm);
                     String p1 = sc.nextLine();
                     ArrayList<Integer> pol1 = extractPol(p1);
-                    computeAddMulTable(pol1, prime);
+                    PolynomialModP polMod = new PolynomialModP(pol1, prime);
+                    computeAddMulTable(pol1, polMod, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
@@ -175,10 +176,23 @@ public class Main {
         /* TO DO call primitive instance */
     }
 
-    private static void computeAddMulTable(ArrayList<Integer> pol1, int prime) {
+    private static void computeAddMulTable(ArrayList<Integer> pol1, PolynomialModP polMod, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime);
+
+        FiniteField f1 = new FiniteField(p1, prime);
+        int order = (int) Math.pow(p1.getModPrime(),p1.getDegree());
+        /*
+        PolynomialModP[][] result = f1.AddMulTable();
+        for (int i = 0; i < order; i++) {
+            for (int j = 0; j < order; j++) {
+                System.out.print(result[i][j]);
+                System.out.print(" \t");
+            }
+        }
+        */
         //System.out.println("the addition and multiplication table of "+pol1+" (mod) "+prime+" is: "+p1.AddMulTable(prime));
     }
+
 
     private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) {
         PolynomialModP p1 = new PolynomialModP(pol1, prime);
@@ -187,7 +201,7 @@ public class Main {
         //System.out.println(p1 + " and "+p2+"are congruent modulo "+p3);
     }
 
-    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime);
         PolynomialModP p2 = new PolynomialModP(pol2, prime);
         //System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1+"*a + "+p2+"*b = "+ p1.ExtEuclid(p2));
