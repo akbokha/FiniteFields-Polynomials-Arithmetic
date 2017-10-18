@@ -1,15 +1,11 @@
-<<<<<<< HEAD
-import org.junit.Assert;
-=======
->>>>>>> origin/master
-import org.junit.Test;
 
+import org.junit.Assert;
+import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
 public class FiniteFieldTest {
-<<<<<<< HEAD
     @Test
     public void addMulTable() throws Exception {
         //test for Finite field f = x^2 + x + 1 in mod 2
@@ -79,8 +75,7 @@ public class FiniteFieldTest {
         Assert.assertArrayEquals(expResult, result);
     }
 
-}
-=======
+
 
     @Test
     public void findElements() throws Exception{
@@ -120,4 +115,3 @@ public class FiniteFieldTest {
 
 
 }
->>>>>>> origin/master
