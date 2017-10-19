@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
 /**
  *
  * @author Abdel K. Bokharouss
@@ -124,8 +125,47 @@ public class FiniteField implements Cloneable {
         return isIrreducible;
     }
     
-    public PolynomialModP produceIrreduciblePoly(int deg) {
-        return null;
+    /**
+     * Produce an irreducible polynomial of a specified degree in the context of this finite field
+     * @param deg the degree of the irreducible polynomial we want
+     * @return a polynomial p of degree n such that isIrreducible(p)
+     * @throws CloneNotSupportedException 
+     */
+    public PolynomialModP produceIrreduciblePoly(int deg) throws CloneNotSupportedException {
+        Random random = new Random();
+        
+        // produce a random polynomial of degree deg
+        PolynomialModP irrPoly = null;
+        
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        for (int i = 0; i <= deg; i++) {
+            if (i == deg) { // if leading coefficient would become 0, then degree would be deg - 1 
+                int coeff = random.nextInt(modP);
+                if (coeff == 0) {
+                    coeff++;
+                }
+                coefficients.add(coeff);
+            }
+            coefficients.add(random.nextInt(modP)); 
+        }
+        irrPoly = new PolynomialModP(coefficients, modP);
+        
+        // if this polynomial is not irreducbile, redo process until we find an irreducible polynomial of the specified degree 
+        while (! isIrreducible(irrPoly)) {
+            ArrayList<Integer> newCoefficients = new ArrayList<>();
+            for (int i = 0; i <= deg; i++) {
+                if (i == deg) { // if leading coefficient would become 0, then degree would be deg - 1 
+                    int coeff = random.nextInt(modP);
+                    if (coeff == 0) {
+                        coeff++;
+                    }
+                    newCoefficients.add(coeff);
+                }
+            newCoefficients.add(random.nextInt(modP)); 
+            }
+            irrPoly = new PolynomialModP(newCoefficients, modP);
+        }
+        return irrPoly;
     }
 
     public PolynomialModP getPolynomial() {
