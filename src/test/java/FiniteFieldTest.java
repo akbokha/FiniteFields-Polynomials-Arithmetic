@@ -39,10 +39,11 @@ public class FiniteFieldTest {
         PolynomialModP expResultP = new PolynomialModP(expResultList, modP);
 
         PolynomialModP result = modPolynomialField.takeMod(f.getPolynomial());
-        System.out.println("divide "+p+" by "+modPolynomial);
-        System.out.println("expected polynomial: "+expResultP);
-        System.out.println("result long division: "+result);
+        System.out.println("divide " + p + " by " + modPolynomial);
+        System.out.println("expected polynomial: " + expResultP);
+        System.out.println("result long division: " + result);
         assertEquals(expResultP, result);
+    }
 
     public void noInverse() throws Exception {
         // Z/2Z[X]
