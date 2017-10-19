@@ -8,11 +8,6 @@ import static org.junit.Assert.*;
 public class FiniteFieldTest {
     
     @Test
-    public void takeMod() throws Exception {
-        ArrayList<FiniteField> fieldElement = new ArrayList<>();
-    }
-    
-    @Test
     public void noInverse() throws Exception {
         // Z/2Z[X]
         int modP = 2;
@@ -85,18 +80,110 @@ public class FiniteFieldTest {
     }
     
     @Test
-    public void sum() throws Exception {
-        ArrayList<FiniteField> fieldElement = new ArrayList<>();
-    }
-    
-    @Test
     public void product() throws Exception {
-        ArrayList<FiniteField> fieldElement = new ArrayList<>();
+        // example from finite field arithmetic wiki (Rijndael's finite field)
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+        
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // x = x^6 + x^4 + x + 1
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1); // 1
+        coeff2.add(1); // x
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1); // x^4
+        coeff2.add(0);
+        coeff2.add(1); // x^6
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // y = x^7 + x^6 + x^3 + x
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(0);
+        coeff3.add(1); // x
+        coeff3.add(0);
+        coeff3.add(1); // x^3
+        coeff3.add(0);
+        coeff3.add(0);
+        coeff3.add(1); // x^6
+        coeff3.add(1); // x^7
+        PolynomialModP y = new PolynomialModP(coeff3, modP);
+        
+        // polynomial: x^0 (1)
+        ArrayList<Integer> one = new ArrayList<>();
+        one.add(1);
+        PolynomialModP polyOne = new PolynomialModP(one, modP);
+       
+        // x * y mod d should result in the polyomial: x^0 (1)
+        assertEquals(polyOne, field.product(x, y));
     }
     
     @Test
     public void quotient() throws Exception {
-        ArrayList<FiniteField> fieldElement = new ArrayList<>();
+                // example from finite field arithmetic wiki (Rijndael's finite field)
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+        
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // x = x^6 + x^4 + x + 1
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1); // 1
+        coeff2.add(1); // x
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1); // x^4
+        coeff2.add(0);
+        coeff2.add(1); // x^6
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // y = x^7 + x^6 + x^3 + x
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(0);
+        coeff3.add(1); // x
+        coeff3.add(0);
+        coeff3.add(1); // x^3
+        coeff3.add(0);
+        coeff3.add(0);
+        coeff3.add(1); // x^6
+        coeff3.add(1); // x^7
+        PolynomialModP y = new PolynomialModP(coeff3, modP);
+        
+        // z  = polynomial: x^0 (1)
+        ArrayList<Integer> one = new ArrayList<>();
+        one.add(1);
+        PolynomialModP z = new PolynomialModP(one, modP);
+       
+        // x * y mod d should result in the polyomial z: x^0 (1)
+        // so z / y should result in x
+        assertEquals(x, field.quotient(z, y));
     }
 
     @Test
