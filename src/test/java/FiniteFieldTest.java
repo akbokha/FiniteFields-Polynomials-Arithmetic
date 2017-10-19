@@ -1,5 +1,4 @@
 
-import org.junit.Assert;
 import org.junit.Test;
 import java.util.ArrayList;
 
@@ -224,7 +223,7 @@ public class FiniteFieldTest {
     }
 
     @Test
-    public void addMulTable() throws Exception {
+    public void MulTable() throws Exception {
         //test for Finite field f = x^2 + x + 1 in mod 2
         //there are four elements: 0,1,x,x+1
         int modP = 2;
@@ -276,24 +275,27 @@ public class FiniteFieldTest {
             expResult[0][j] = element1;
         }
 
-        expResult[1][1] = element2;
-        expResult[1][2] = element3;
-        expResult[1][3] = element4;
-        expResult[2][1] = element3;
-        expResult[2][2] = element4;
+        expResult[0][0] = element1;
+        expResult[0][1] = element2;
+        expResult[0][2] = element3;
+        expResult[0][3] = element4;
+
+        expResult[1][0] = element2;
+        expResult[1][1] = element1;
+        expResult[1][2] = element4;
+        expResult[1][3] = element3;
+
+        expResult[2][0] = element3;
+        expResult[2][1] = element4;
+        expResult[2][2] = element1;
         expResult[2][3] = element2;
-        expResult[3][1] = element4;
+
+        expResult[3][0] = element4;
+        expResult[3][1] = element3;
         expResult[3][2] = element2;
-        expResult[3][3] = element3;
+        expResult[3][3] = element1;
 
-
-        ArrayList<PolynomialModP> allElements = new ArrayList<>();
-        allElements.add(poly1);
-        allElements.add(poly2);
-        allElements.add(poly3);
-        allElements.add(poly4);
-
-        FiniteField[][] result = inputField.AddMulTable(allElements, polynomialModList,2);
+        FiniteField[][] result = inputField.addTable(polynomialModList,2);
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result.length; j++) {
                 assertEquals(expResult[i][j].getPolynomial(), result[i][j].getPolynomial());
@@ -302,7 +304,7 @@ public class FiniteFieldTest {
     }
 
     @Test
-    public void AddMulTable2() throws Exception {
+    public void MulTable2() throws Exception {
         int modP = 2;
 
         ArrayList<Integer> terms = new ArrayList<>();
@@ -311,13 +313,12 @@ public class FiniteFieldTest {
         terms.add(0);
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, modP, false);
-        int order = (int) Math.pow(modP, 3);
+        int order = (int) Math.pow(modP, poly.getDegree());
 
-        FiniteField field = new FiniteField(poly, modP);
-        ArrayList<PolynomialModP> allElements = field.findElements();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(1);
         input.add(1);
+        input.add(0);
         input.add(1);
 
         PolynomialModP inputP = new PolynomialModP(input, modP);
@@ -388,7 +389,7 @@ public class FiniteFieldTest {
         polynomialModList.add(0);
         polynomialModList.add(1);
 
-        FiniteField[][] expResult = new FiniteField[8][8];
+        FiniteField[][] expResult = new FiniteField[order][order];
         for (int i = 0; i < order; i++) {
             expResult[i][0] = element1;
         }
@@ -453,7 +454,7 @@ public class FiniteFieldTest {
         expResult[7][7] = element4;
 
 
-        FiniteField[][] result = inputField.AddMulTable(allElements, polynomialModList,3);
+        FiniteField[][] result = inputField.mulTable(polynomialModList,3);
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result.length; j++) {
                 assertEquals(expResult[i][j].getPolynomial(), result[i][j].getPolynomial());
@@ -461,7 +462,10 @@ public class FiniteFieldTest {
         }
     }
 
+    @Test
+    public void addTable() throws Exception {
 
+    }
     @Test
     public void findElements() throws Exception{
 

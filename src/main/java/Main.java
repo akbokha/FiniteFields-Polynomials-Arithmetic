@@ -132,7 +132,8 @@ public class Main {
                     System.out.println("Please enter an irreducible polynomial"+polynomialForm);
                     String p1 = sc.nextLine();
                     ArrayList<Integer> pol1 = extractPol(p1);
-                    computeAddMulTable(pol1, prime);
+                    computeMulTable(pol1, prime);
+                    computeAddTable(pol1, prime);
                 } catch (NumberFormatException e) {
                     System.out.println("please enter a valid number");
                 }
@@ -175,9 +176,35 @@ public class Main {
         /* TO DO call primitive instance */
     }
 
-    private static void computeAddMulTable(ArrayList<Integer> pol1, int prime) {
-        PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
-        //System.out.println("the addition and multiplication table of "+pol1+" (mod) "+prime+" is: "+p1.AddMulTable(prime));
+    private static void computeMulTable(ArrayList<Integer> field1, int prime) throws CloneNotSupportedException {
+        PolynomialModP p1 = new PolynomialModP(field1, prime);
+        FiniteField f1 = new FiniteField(p1, prime);
+        System.out.println("The multiplication table of "+p1+" in Z/"+prime+"Z is: ");
+
+        FiniteField[][] result = f1.mulTable(field1, p1.getDegree());
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                System.out.print(result[i][j].getPolynomial());
+                System.out.print("\t\t");
+            }
+            System.out.println();
+        }
+
+    }
+
+    private static void computeAddTable(ArrayList<Integer> field1, int prime) throws CloneNotSupportedException {
+        PolynomialModP p1 = new PolynomialModP(field1, prime);
+        FiniteField f1 = new FiniteField(p1, prime);
+        System.out.println("The addition table of "+p1+" in Z/"+prime+"Z is: ");
+        FiniteField[][] result = f1.mulTable(field1, p1.getDegree());
+
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                System.out.print(result[i][j].getPolynomial());
+                System.out.print("\t\t");
+            }
+            System.out.println();
+        }
     }
 
     private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) {

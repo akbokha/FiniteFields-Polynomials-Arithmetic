@@ -176,19 +176,15 @@ public class FiniteField implements Cloneable {
         return this.modP;
     }
 
-    public FiniteField[][] AddMulTable (ArrayList<PolynomialModP> elements, ArrayList<Integer> poly, int degree) throws CloneNotSupportedException {
+    public FiniteField[][] mulTable(ArrayList<Integer> poly, int degree) throws CloneNotSupportedException {
         FiniteField f = (FiniteField) this.clone();
         if(f == null){
             throw new IllegalArgumentException("The polynomials cannot be null.");
         }
         int modulus = f.getMod();
-        //ArrayList<PolynomialModP> elements = f.findElements();
+        ArrayList<PolynomialModP> elements = f.findElements();
         PolynomialModP modPolynomial = new PolynomialModP(poly, modulus);
-//        ArrayList<Integer> reversePoly = new ArrayList<>();
-//        for (int i = 0; i < poly.size() - 1; i++) {
-//            reversePoly.add(-poly.get(i));
-//        }
-//        PolynomialModP reverseP = new PolynomialModP(reversePoly, modulus);
+
         int order = (int) Math.pow(modulus, degree);
         FiniteField[][] result = new FiniteField[order][order];
 
@@ -206,15 +202,7 @@ public class FiniteField implements Cloneable {
             PolynomialModP field = new PolynomialModP(fieldElement, modulus);
             result[0][j] = new FiniteField(field, modulus);
         }
-        /*
-        for (int i = 0; i < order; i++) {
-            for (int j = 0; j < order; j++) {
-                ArrayList<PolynomialModP> fieldElement = new ArrayList<>();
-                fieldElement.add(elements.get(i).sum(elements.get(j)));
-                result[i][j] = fieldElement.get(0);
-            }
-        }
-        */
+
         //multiplication table
         for (int i = 1; i < order; i++) {
             for (int j = 1; j < order; j++) {
@@ -238,6 +226,38 @@ public class FiniteField implements Cloneable {
             }
             System.out.println();
         }
+        return result;
+    }
+
+    public FiniteField[][] addTable (ArrayList<Integer> poly, int degree) throws CloneNotSupportedException {
+        FiniteField f = (FiniteField) this.clone();
+        if(f == null){
+            throw new IllegalArgumentException("The polynomials cannot be null.");
+        }
+        int modulus = f.getMod();
+        ArrayList<PolynomialModP> elements = f.findElements();
+        PolynomialModP modPolynomial = new PolynomialModP(poly, modulus);
+
+        int order = (int) Math.pow(modulus, degree);
+        FiniteField[][] result = new FiniteField[order][order];
+
+        //addition table
+        for (int i = 0; i < order; i++) {
+            for (int j = 0; j < order; j++) {
+                ArrayList<FiniteField> fieldElement = new ArrayList<>();
+                PolynomialModP sum = elements.get(i).sum(elements.get(j));
+                fieldElement.add(new FiniteField(sum, modulus));
+
+                FiniteField sumField = new FiniteField(sum, modulus);
+                FiniteField modField = new FiniteField(modPolynomial, modulus);
+
+                PolynomialModP finalResultP = modField.takeMod(sum);
+
+                fieldElement.set(0, new FiniteField(finalResultP, modulus));
+                result[i][j] = fieldElement.get(0);
+            }
+        }
+
         return result;
     }
 }
