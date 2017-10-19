@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 /**
  *
@@ -98,32 +99,43 @@ public class FiniteField implements Cloneable {
         return null;
     }
 
-    public int getMod() {
-        return modP;
+    public PolynomialModP getPolynomial() {
+        return this.polynomial;
     }
 
-    public PolynomialModP[][] AddMulTable (ArrayList<PolynomialModP> elements, PolynomialModP polMod, int degree) throws CloneNotSupportedException {
+    public int getMod() {
+        return this.modP;
+    }
+
+    public FiniteField[][] AddMulTable (ArrayList<PolynomialModP> elements, ArrayList<Integer> poly, int degree) throws CloneNotSupportedException {
         FiniteField f = (FiniteField) this.clone();
         if(f == null){
             throw new IllegalArgumentException("The polynomials cannot be null.");
         }
         int modulus = f.getMod();
-        //ArrayList<PolynomialModP> elements = field.findElements();
-
+        //ArrayList<PolynomialModP> elements = f.findElements();
+        PolynomialModP p = new PolynomialModP(poly, modulus);
+        ArrayList<Integer> reversePoly = new ArrayList<>();
+        for (int i = 0; i < poly.size() - 1; i++) {
+            reversePoly.add(-poly.get(i));
+        }
+        PolynomialModP reverseP = new PolynomialModP(reversePoly, modulus);
         int order = (int) Math.pow(modulus, degree);
-        PolynomialModP[][] result = new PolynomialModP[order][order];
+        FiniteField[][] result = new FiniteField[order][order];
 
         //base case (0)
         for (int i = 0; i < order; i++) {
             ArrayList<Integer>  fieldElement = new ArrayList<>();
             fieldElement.add(0);
-            result[i][0] = new PolynomialModP(fieldElement, modulus);
+            PolynomialModP field = new PolynomialModP(fieldElement, modulus);
+            result[i][0] = new FiniteField(field, modulus);
         }
 
         for (int j = 0; j < order; j++) {
             ArrayList<Integer>  fieldElement = new ArrayList<>();
             fieldElement.add(0);
-            result[0][j] = new PolynomialModP(fieldElement, modulus);
+            PolynomialModP field = new PolynomialModP(fieldElement, modulus);
+            result[0][j] = new FiniteField(field, modulus);
         }
         /*
         for (int i = 0; i < order; i++) {
@@ -138,10 +150,35 @@ public class FiniteField implements Cloneable {
         for (int i = 1; i < order; i++) {
             for (int j = 1; j < order; j++) {
                 ArrayList<FiniteField> fieldElement = new ArrayList<>();
-                elements.get(i).product(elements.get(j))
-                fieldElement.add();
-                result[i][j] = fieldElement.get(0).takeMod(polMod);
+                PolynomialModP product = elements.get(i).product(elements.get(j));
+                fieldElement.add(new FiniteField(product, modulus));
+                //PolynomialModP pResult = fieldElement.get(0).takeMod(p);
+                //result[i][j] = new FiniteField(pResult, modulus);
+                ArrayList<Integer> minusMaxDegree = new ArrayList<>();
+                for (int z = 0; z < p.getDegree()+1; z++) {
+                    if (z == p.getDegree()) {
+                        minusMaxDegree.add(poly.get(z));
+                    } else {
+                        minusMaxDegree.add(0);
+                    }
+                }
+                PolynomialModP mmD = new PolynomialModP(minusMaxDegree, modulus);
+                if (fieldElement.get(0).getPolynomial().getDegree() == p.getDegree()) {
+                    for (int k = 0; k < reverseP.getDegree(); k++) {
+                        FiniteField newResult = new FiniteField((fieldElement.get(0).getPolynomial().sum(reverseP)).difference(mmD), modulus);
+                        fieldElement.set(0, newResult);
+                    }
+                }
+                result[i][j] = fieldElement.get(0);
             }
+        }
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                System.out.print(result[i][j].getPolynomial());
+                System.out.print("\t");
+                //System.out.println("element ["+i+"]["+j+"]"+result[i][j].elements);
+            }
+            System.out.println();
         }
         return result;
     }

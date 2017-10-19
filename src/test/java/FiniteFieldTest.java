@@ -7,6 +7,12 @@ import static org.junit.Assert.*;
 
 public class FiniteFieldTest {
     @Test
+    public void takeMod() throws Exception {
+        ArrayList<FiniteField> fieldElement = new ArrayList<>();
+
+    }
+
+    @Test
     public void addMulTable() throws Exception {
         //test for Finite field f = x^2 + x + 1 in mod 2
         //there are four elements: 0,1,x,x+1
@@ -45,24 +51,29 @@ public class FiniteFieldTest {
         PolynomialModP poly4 = new PolynomialModP(list4, modP);
         FiniteField element4 = new FiniteField(poly4, modP);
 
+        //polynomial mod x^2 + x + 1
+        ArrayList<Integer> polynomialModList = new ArrayList<>();
+        polynomialModList.add(1);
+        polynomialModList.add(1);
+        polynomialModList.add(1);
 
-        PolynomialModP[][] expResult = new PolynomialModP[4][4];
+        FiniteField[][] expResult = new FiniteField[4][4];
         for (int i = 0; i < 4; i++) {
-            expResult[i][0] = poly1;
+            expResult[i][0] = element1;
         }
         for (int j = 0; j < 4; j++) {
-            expResult[0][j] = poly1;
+            expResult[0][j] = element1;
         }
 
-        expResult[1][1] = poly2;
-        expResult[1][2] = poly3;
-        expResult[1][3] = poly4;
-        expResult[2][1] = poly3;
-        expResult[2][2] = poly4;
-        expResult[2][3] = poly2;
-        expResult[3][1] = poly4;
-        expResult[3][2] = poly2;
-        expResult[3][3] = poly3;
+        expResult[1][1] = element2;
+        expResult[1][2] = element3;
+        expResult[1][3] = element4;
+        expResult[2][1] = element3;
+        expResult[2][2] = element4;
+        expResult[2][3] = element2;
+        expResult[3][1] = element4;
+        expResult[3][2] = element2;
+        expResult[3][3] = element3;
 
 
         ArrayList<PolynomialModP> allElements = new ArrayList<>();
@@ -71,8 +82,12 @@ public class FiniteFieldTest {
         allElements.add(poly3);
         allElements.add(poly4);
 
-        PolynomialModP[][] result = inputField.AddMulTable(allElements, 2);
-        Assert.assertArrayEquals(expResult, result);
+        FiniteField[][] result = inputField.AddMulTable(allElements, polynomialModList,2);
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result.length; j++) {
+                assertEquals(expResult[i][j].getPolynomial(), result[i][j].getPolynomial());
+            }
+        }
     }
 
 
@@ -103,6 +118,61 @@ public class FiniteFieldTest {
         coefficients.set(0, 1);
         field_elements.add(new PolynomialModP(coefficients, p, false));
 
+        //get result and compare to expected result
+        ArrayList<PolynomialModP> result = field.findElements();
+        for(int i = 0; i < field_elements.size(); i++){
+            System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
+            System.out.println("Result element " + i + ": " + result.get(i).toString());
+            assertEquals(field_elements.get(i).toString(), result.get(i).toString());
+        }
+
+    }
+
+    @Test
+    public void findElements2() throws Exception{
+
+        //construct finite field R = Z/2Z, f = x^3 + x + 1
+        int p = 2;
+        ArrayList<Integer> terms = new ArrayList<>();
+        terms.add(1);
+        terms.add(1);
+        terms.add(0);
+        terms.add(1);
+        PolynomialModP poly = new PolynomialModP(terms, p, false);
+        FiniteField field = new FiniteField(poly, p);
+        System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
+
+        //construct expected ArrayList of elements of the field
+        ArrayList<PolynomialModP> field_elements = new ArrayList<>();
+        ArrayList<Integer> coefficients = new ArrayList<>();
+        //0
+        coefficients.add(0);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //1
+        coefficients.set(0, 1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x
+        coefficients.set(0, 0);
+        coefficients.add(1, 1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x+1
+        coefficients.set(0, 1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x^2
+        coefficients.set(0,0);
+        coefficients.set(1,0);
+        coefficients.add(1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x^2+1
+        coefficients.set(0,1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x^2+x
+        coefficients.set(0,0);
+        coefficients.set(1,1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
+        //x^2+x+1
+        coefficients.set(0,1);
+        field_elements.add(new PolynomialModP(coefficients, p, false));
         //get result and compare to expected result
         ArrayList<PolynomialModP> result = field.findElements();
         for(int i = 0; i < field_elements.size(); i++){

@@ -43,6 +43,11 @@ public class PolynomialModP implements Cloneable {
         this.terms = takeMod(terms, modPrime, removeLeading0s);
     }
 
+    public PolynomialModP(ArrayList<Integer> terms, int modPrime) {
+        this.modPrime = modPrime;
+        this.terms = takeMod(terms, modPrime, true);
+    }
+
     /*public PolynomialModP(ArrayList<Integer> terms, int modPrime, int unneededArgument) {
         this.modPrime = modPrime;
         for(int i = this.terms.size() - 1; i > 0; i--){
