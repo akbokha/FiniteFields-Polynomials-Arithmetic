@@ -91,8 +91,37 @@ public class FiniteField implements Cloneable {
         return takeMod(result);
     }
     
-    public boolean isIrreducible (PolynomialModP poly) {
-        return false;
+    /**
+     * Check the reducibility of a polynomial in this finite field
+     * @param poly the polynomial of which the reducibility is checked
+     * @return true if poly is irreducible in this, false otherwise
+     * @throws CloneNotSupportedException 
+     */
+    public boolean isIrreducible (PolynomialModP poly) throws CloneNotSupportedException {
+        boolean isIrreducible = true;
+        int n = poly.getDegree();
+        ArrayList<PolynomialModP> fieldElements = findElements();
+        
+        // zero polynomial
+        ArrayList<Integer> zero = new ArrayList<>();
+        zero.add(0);
+        PolynomialModP polyZero = new PolynomialModP(zero, modP);
+        
+        if (poly.getDegree() > 1) { // constants / linear polynomails are irreducible 
+            for (PolynomialModP fieldElement : fieldElements) {
+                if (fieldElement.getDegree() > 0) { // consider only non constant polynomials
+                    if (poly.longDivision(poly)[1].equals(polyZero)) { // divisible (no remainder)
+                        if (n != fieldElement.getDegree()) {
+                            isIrreducible = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            isIrreducible = false;
+        }
+        return isIrreducible;
     }
     
     public PolynomialModP produceIrreduciblePoly(int deg) {
