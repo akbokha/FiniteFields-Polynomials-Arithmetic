@@ -121,7 +121,7 @@ public class PolynomialModP implements Cloneable {
         for (int i = 0; i < maxLength; i++) {
             result.add(i, (a.getTerms().get(i).add(b.getTerms().get(i))).getNumber());
         }
-        return new PolynomialModP(result, modPrime, true);
+        return new PolynomialModP(result, modPrime);
     }
     
     public PolynomialModP difference(PolynomialModP poly) {
@@ -139,7 +139,7 @@ public class PolynomialModP implements Cloneable {
         for (int i = 0; i < maxLength; i++) {
             result.add(i, a.getTerms().get(i).subtract(b.getTerms().get(i)).getNumber());
         }
-        return new PolynomialModP(result, modPrime, true);
+        return new PolynomialModP(result, modPrime);
     }
     
     public PolynomialModP product(PolynomialModP poly) {
@@ -169,7 +169,7 @@ public class PolynomialModP implements Cloneable {
         for (int k = 0; k <= newDegree; k++) {
             result.add(k, new_coefficients[k]);
         }
-        return new PolynomialModP(result, modPrime, true);
+        return new PolynomialModP(result, modPrime);
     }
 
     /**
@@ -184,7 +184,7 @@ public class PolynomialModP implements Cloneable {
         for(IntegerModP i : terms) {
             list.add(i.getNumber() * number);
         }
-        return new PolynomialModP(list, modPrime, true);
+        return new PolynomialModP(list, modPrime);
     }
 
     /**
@@ -199,7 +199,7 @@ public class PolynomialModP implements Cloneable {
         if(b == null) {
             throw new IllegalArgumentException("The polynomial parameter must not be null");
         }
-        PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime, true);
+        PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
         PolynomialModP r = (PolynomialModP) this.clone();
         while(r.getDegree() >= b.getDegree()) {
             ArrayList<Integer> list = new ArrayList<>();
@@ -207,7 +207,7 @@ public class PolynomialModP implements Cloneable {
                 list.add(0);
             }
             list.add(1);
-            PolynomialModP xrminb = new PolynomialModP(list, modPrime, true);
+            PolynomialModP xrminb = new PolynomialModP(list, modPrime);
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
             q = q.sum(xrminb.product(lcrDIVlcb));
             r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
@@ -217,7 +217,7 @@ public class PolynomialModP implements Cloneable {
 
     @Override
     public String toString() {
-        PolynomialModP poly = new PolynomialModP(this.getTermsInt(), modPrime, true);
+        PolynomialModP poly = new PolynomialModP(this.getTermsInt(), modPrime);
         StringBuilder str = new StringBuilder("");
         if(poly.getTerms().size() != 0) {
             str.append(termToString(poly.getTerms().get(poly.getTerms().size() - 1).getNumber(), poly.getTerms().size() - 1, true));
@@ -358,12 +358,12 @@ public class PolynomialModP implements Cloneable {
 
         ArrayList<Integer> l = new ArrayList();
         l.add(0,1);
-        PolynomialModP x = new PolynomialModP(l, a.getModPrime(), true);
-        PolynomialModP v = new PolynomialModP(l, a.getModPrime(), true);
+        PolynomialModP x = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP v = new PolynomialModP(l, a.getModPrime());
         l.set(0,0);
-        PolynomialModP y = new PolynomialModP(l, a.getModPrime(), true);
-        PolynomialModP u = new PolynomialModP(l, a.getModPrime(),true);
-        PolynomialModP zero = new PolynomialModP(l, a.getModPrime(), true);
+        PolynomialModP y = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP u = new PolynomialModP(l, a.getModPrime());
+        PolynomialModP zero = new PolynomialModP(l, a.getModPrime());
 
         while(!(b.equals(zero))){
             PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder

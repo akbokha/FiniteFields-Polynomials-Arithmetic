@@ -44,6 +44,182 @@ public class FiniteFieldTest {
         System.out.println("result long division: "+result);
         assertEquals(expResultP, result);
 
+    public void noInverse() throws Exception {
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^2 + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1);
+        coeff.add(0);
+        coeff.add(1);
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // a = x + 1 (elment we try to find the inverse for
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1);
+        coeff2.add(1);
+        PolynomialModP a = new PolynomialModP(coeff2, modP);
+
+        // considering finite field: Z/2Z[X]/(x^2+1)
+        FiniteField field = new FiniteField(d, modP);
+
+        // polynomial should have no inverse (indicated by returning null object) in in this finite field
+        assertEquals(null, field.inverse(a));
+    }
+
+        @Test
+    public void inverse() throws Exception {
+        // example from math.stackexchange.com (question: 505580)
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // a = x^6 + x^4 + x + 1
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1); // 1
+        coeff2.add(1); // x
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1); // x^4
+        coeff2.add(0);
+        coeff2.add(1); // x^6
+        PolynomialModP a = new PolynomialModP(coeff2, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+
+        // inverse of a in Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1) should be: (x^7 + x^6+ x^3 + x)
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(0);
+        coeff3.add(1); // x
+        coeff3.add(0);
+        coeff3.add(1); // x^3
+        coeff3.add(0);
+        coeff3.add(0);
+        coeff3.add(1); // x^6
+        coeff3.add(1); // x^7
+        PolynomialModP inverse = new PolynomialModP(coeff3, modP);
+
+        // polynomial should have no inverse (indicated by returning null object) in in this finite field
+        assertEquals(inverse, field.inverse(a));
+    }
+
+    @Test
+    public void product() throws Exception {
+        // example from finite field arithmetic wiki (Rijndael's finite field)
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+
+        // x = x^6 + x^4 + x + 1
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1); // 1
+        coeff2.add(1); // x
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1); // x^4
+        coeff2.add(0);
+        coeff2.add(1); // x^6
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+
+        // y = x^7 + x^6 + x^3 + x
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(0);
+        coeff3.add(1); // x
+        coeff3.add(0);
+        coeff3.add(1); // x^3
+        coeff3.add(0);
+        coeff3.add(0);
+        coeff3.add(1); // x^6
+        coeff3.add(1); // x^7
+        PolynomialModP y = new PolynomialModP(coeff3, modP);
+
+        // polynomial: x^0 (1)
+        ArrayList<Integer> one = new ArrayList<>();
+        one.add(1);
+        PolynomialModP polyOne = new PolynomialModP(one, modP);
+
+        // x * y mod d should result in the polyomial: x^0 (1)
+        assertEquals(polyOne, field.product(x, y));
+    }
+
+    @Test
+    public void quotient() throws Exception {
+                // example from finite field arithmetic wiki (Rijndael's finite field)
+        // Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+
+        // x = x^6 + x^4 + x + 1
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(1); // 1
+        coeff2.add(1); // x
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(1); // x^4
+        coeff2.add(0);
+        coeff2.add(1); // x^6
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+
+        // y = x^7 + x^6 + x^3 + x
+        ArrayList<Integer> coeff3 = new ArrayList<>();
+        coeff3.add(0);
+        coeff3.add(1); // x
+        coeff3.add(0);
+        coeff3.add(1); // x^3
+        coeff3.add(0);
+        coeff3.add(0);
+        coeff3.add(1); // x^6
+        coeff3.add(1); // x^7
+        PolynomialModP y = new PolynomialModP(coeff3, modP);
+
+        // z  = polynomial: x^0 (1)
+        ArrayList<Integer> one = new ArrayList<>();
+        one.add(1);
+        PolynomialModP z = new PolynomialModP(one, modP);
+
+        // x * y mod d should result in the polyomial z: x^0 (1)
+        // so z / y should result in x
+        assertEquals(x, field.quotient(z, y));
     }
 
     @Test
