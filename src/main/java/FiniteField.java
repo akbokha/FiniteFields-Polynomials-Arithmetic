@@ -114,12 +114,12 @@ public class FiniteField implements Cloneable {
         }
         int modulus = f.getMod();
         //ArrayList<PolynomialModP> elements = f.findElements();
-        PolynomialModP p = new PolynomialModP(poly, modulus);
-        ArrayList<Integer> reversePoly = new ArrayList<>();
-        for (int i = 0; i < poly.size() - 1; i++) {
-            reversePoly.add(-poly.get(i));
-        }
-        PolynomialModP reverseP = new PolynomialModP(reversePoly, modulus);
+        PolynomialModP modPolynomial = new PolynomialModP(poly, modulus);
+//        ArrayList<Integer> reversePoly = new ArrayList<>();
+//        for (int i = 0; i < poly.size() - 1; i++) {
+//            reversePoly.add(-poly.get(i));
+//        }
+//        PolynomialModP reverseP = new PolynomialModP(reversePoly, modulus);
         int order = (int) Math.pow(modulus, degree);
         FiniteField[][] result = new FiniteField[order][order];
 
@@ -152,31 +152,20 @@ public class FiniteField implements Cloneable {
                 ArrayList<FiniteField> fieldElement = new ArrayList<>();
                 PolynomialModP product = elements.get(i).product(elements.get(j));
                 fieldElement.add(new FiniteField(product, modulus));
-                //PolynomialModP pResult = fieldElement.get(0).takeMod(p);
-                //result[i][j] = new FiniteField(pResult, modulus);
-                ArrayList<Integer> minusMaxDegree = new ArrayList<>();
-                for (int z = 0; z < p.getDegree()+1; z++) {
-                    if (z == p.getDegree()) {
-                        minusMaxDegree.add(poly.get(z));
-                    } else {
-                        minusMaxDegree.add(0);
-                    }
-                }
-                PolynomialModP mmD = new PolynomialModP(minusMaxDegree, modulus);
-                if (fieldElement.get(0).getPolynomial().getDegree() == p.getDegree()) {
-                    for (int k = 0; k < reverseP.getDegree(); k++) {
-                        FiniteField newResult = new FiniteField((fieldElement.get(0).getPolynomial().sum(reverseP)).difference(mmD), modulus);
-                        fieldElement.set(0, newResult);
-                    }
-                }
+
+                FiniteField productField = new FiniteField(product, modulus);
+                FiniteField modField = new FiniteField(modPolynomial, modulus);
+
+                PolynomialModP finalResultP = modField.takeMod(product);
+
+                fieldElement.set(0, new FiniteField(finalResultP, modulus));
                 result[i][j] = fieldElement.get(0);
             }
         }
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result.length; j++) {
                 System.out.print(result[i][j].getPolynomial());
-                System.out.print("\t");
-                //System.out.println("element ["+i+"]["+j+"]"+result[i][j].elements);
+                System.out.print("\t\t");
             }
             System.out.println();
         }
