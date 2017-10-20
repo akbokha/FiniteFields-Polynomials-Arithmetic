@@ -356,12 +356,12 @@ public class PolynomialModP implements Cloneable {
         while(!(b.equals(zero))){
             PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
             PolynomialModP q = longDiv[0]; // q = quot(a,b)
-            a = b.getClone();
+            a = b.clone();
             b = longDiv[1]; // b = rem(a,b)
-            PolynomialModP x2 = x.getClone();
-            PolynomialModP y2 = y.getClone();
-            x = u.getClone();
-            y = v.getClone();
+            PolynomialModP x2 = x.clone();
+            PolynomialModP y2 = y.clone();
+            x = u.clone();
+            y = v.clone();
             u = x2.difference(q.product(u));
             v = y2.difference(q.product(v));
         }
@@ -408,8 +408,8 @@ public class PolynomialModP implements Cloneable {
         while(!(b.equals(zero))){
             PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
             r = longDiv[1];
-            a = b.getClone();
-            b = r.getClone();
+            a = b.clone();
+            b = r.clone();
         }
 
         //return the result
@@ -429,6 +429,17 @@ public class PolynomialModP implements Cloneable {
         }
         return false;
 
+    }
+
+    @Override
+    public PolynomialModP clone(){
+        try{
+            return (PolynomialModP) super.clone();
+        }
+        catch (CloneNotSupportedException e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 
 
