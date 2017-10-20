@@ -363,5 +363,44 @@ public class PolynomialModPTest {
         assertEquals(y, expY);
 
     }
+
+    @Test
+    public void Euclid() throws Exception {
+        int modP = 10;
+
+        // gcd( a = x^2, b = x^2 + 2x^4) = x^2
+
+        // a = x^2
+        ArrayList<Integer> coefficientsA = new ArrayList<>();
+        coefficientsA.add(0);
+        coefficientsA.add(0);
+        coefficientsA.add(1);
+        PolynomialModP a = new PolynomialModP(coefficientsA, modP, true);
+        System.out.println("Polynomial a: " + a.toString());
+
+        // b = x^2 + 2x^4
+        ArrayList<Integer> coefficientsB = new ArrayList<>();
+        coefficientsB.add(0);
+        coefficientsB.add(0);
+        coefficientsB.add(1);
+        coefficientsB.add(0);
+        coefficientsB.add(2);
+        PolynomialModP b = new PolynomialModP(coefficientsB, modP, true);
+        System.out.println("Polynomial b: " + b.toString());
+
+        // expected answer gcd = x^2
+        ArrayList<Integer> coefficientsGCD = new ArrayList<>();
+        coefficientsGCD.add(0);
+        coefficientsGCD.add(0);
+        coefficientsGCD.add(1);
+        PolynomialModP expGCD = new PolynomialModP(coefficientsGCD, modP, true);
+        System.out.println("Expected polynomial GCD: " + expGCD.toString());
+
+        // get result and compare to expected
+        PolynomialModP result = a.Euclid(b);
+        System.out.println("Result GCD: " + result.toString());
+        assertEquals(expGCD, result);
+
+    }
             
 }

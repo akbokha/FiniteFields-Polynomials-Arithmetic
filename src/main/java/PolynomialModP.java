@@ -48,18 +48,6 @@ public class PolynomialModP implements Cloneable {
         this.terms = takeMod(terms, modPrime, true);
     }
 
-    /*public PolynomialModP(ArrayList<Integer> terms, int modPrime, int unneededArgument) {
-        this.modPrime = modPrime;
-        for(int i = this.terms.size() - 1; i > 0; i--){
-            if( this.terms.get(i) != 0 ){
-                break;
-            }
-            else{
-                this.terms.remove(i);
-            }
-        }
-        this.terms = takeMod2(terms, modPrime);
-    }*/
 
     /**
      * Takes the modulus of all coefficients of an integer list and stores them in a {@Link IntegerModP}
@@ -345,7 +333,7 @@ public class PolynomialModP implements Cloneable {
      * @throws IllegalArgumentException if {@code a == null || b == null || a.modP != b.modP}
      * @return Polynomials x, y, such that gcd(a, b) = xa + yb
      */
-    public ArrayList<PolynomialModP> ExtEuclid(PolynomialModP b) throws CloneNotSupportedException {
+    public ArrayList<PolynomialModP> ExtEuclid(PolynomialModP b) throws IllegalArgumentException, CloneNotSupportedException {
 
         PolynomialModP a = (PolynomialModP) this.clone();
 
@@ -368,12 +356,12 @@ public class PolynomialModP implements Cloneable {
         while(!(b.equals(zero))){
             PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
             PolynomialModP q = longDiv[0]; // q = quot(a,b)
-            a = (PolynomialModP) b.clone();
+            a = b.getClone();
             b = longDiv[1]; // b = rem(a,b)
-            PolynomialModP x2 = (PolynomialModP) x.clone();
-            PolynomialModP y2 = (PolynomialModP) y.clone();
-            x = (PolynomialModP) u.clone();
-            y = (PolynomialModP) v.clone();
+            PolynomialModP x2 = x.getClone();
+            PolynomialModP y2 = y.getClone();
+            x = u.getClone();
+            y = v.getClone();
             u = x2.difference(q.product(u));
             v = y2.difference(q.product(v));
         }
@@ -394,8 +382,38 @@ public class PolynomialModP implements Cloneable {
         return (a.product(x)).sum(b.product(y));
     }
 
-    public int Euclid(PolynomialModP a) throws IllegalArgumentException, CloneNotSupportedException {
-        return 0;
+    /**
+     * Given two polynomials, a (this) and b (input parameter), this function returns their GCD.
+     * See algorithm 1.2.10 from lecture notes.
+     *
+     * @param b input polynomial with an ArrayList of terms, and an Integer modP
+     * @throws IllegalArgumentException if {@code a == null || b == null || a.modP != b.modP}
+     * @return PolynomialModP GCD(a, b)
+     */
+    public PolynomialModP Euclid(PolynomialModP b) throws IllegalArgumentException, CloneNotSupportedException {
+
+        PolynomialModP a = (PolynomialModP) this.clone(); // get polynomial a
+
+        // check legality of arguments a and b
+        if(a == null || b == null){ throw new IllegalArgumentException("The polynomials cannot be null."); }
+        else if(a.getModPrime() != b.getModPrime()){ throw new IllegalArgumentException("The polynomials must have the same modulus."); }
+
+        //Initialize the remainder and create a zero polynomial
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0,0);
+        PolynomialModP zero = new PolynomialModP(list, a.getModPrime());
+        PolynomialModP r = new PolynomialModP(list, a.getModPrime());
+
+        //Calculate the result, see algorithm 1.2.10 from lecture notes
+        while(!(b.equals(zero))){
+            PolynomialModP[] longDiv = a.longDivision(b); //index 0 is quotient, index 1 is remainder
+            r = longDiv[1];
+            a = b.getClone();
+            b = r.getClone();
+        }
+
+        //return the result
+        return a;
     }
 
     public PolynomialModP getClone() throws CloneNotSupportedException {
