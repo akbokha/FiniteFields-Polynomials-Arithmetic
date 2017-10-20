@@ -417,18 +417,13 @@ public class PolynomialModP implements Cloneable {
     }
 
     public boolean isCongMod(PolynomialModP b, PolynomialModP mod) throws CloneNotSupportedException {
-        if(this.getDegree() != b.getDegree() || this.getDegree() != mod.getDegree()) {
-            throw new IllegalArgumentException("Degree of the polynomials must be the same");
+        if(this.getModPrime() != b.getModPrime() || this.getModPrime() != mod.getModPrime()) {
+            throw new IllegalArgumentException("Modulus of the polynomials must be the same");
         }
-        PolynomialModP a = (PolynomialModP) this.clone();
-        PolynomialModP difference = a.product(b.negate());
-        PolynomialModP r = difference.longDivision(mod)[1];
-        PolynomialModP nullPoly = new PolynomialModP(new ArrayList<Integer>(), a.getDegree());
-        if(r.equals(nullPoly)) {
-            return true;
-        }
-        return false;
-
+        PolynomialModP a = this.clone();
+        PolynomialModP aR = a.longDivision(mod)[1];
+        PolynomialModP bR = b.longDivision(mod)[1];
+        return aR.equals(bR);
     }
 
     @Override

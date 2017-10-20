@@ -330,7 +330,6 @@ public class PolynomialModPTest {
         coefficientsA.add(0);
         coefficientsA.add(1);
         PolynomialModP a = new PolynomialModP(coefficientsA, modP, true);
-        System.out.println("Polynomial a: " + a.toString());
 
         // b = 2x^3 + x
         ArrayList<Integer> coefficientsB = new ArrayList<>();
@@ -339,26 +338,21 @@ public class PolynomialModPTest {
         coefficientsB.add(0);
         coefficientsB.add(2);
         PolynomialModP b = new PolynomialModP(coefficientsB, modP, true);
-        System.out.println("Polynomial b: " + b.toString());
 
         //expected answer x = 8x
         ArrayList<Integer> coefficientsX = new ArrayList<>();
         coefficientsX.add(0);
         coefficientsX.add(8);
         PolynomialModP expX = new PolynomialModP(coefficientsX, modP, true);
-        System.out.println("Expected polynomial x: " + expX.toString());
 
         //expected answer y = 1
         ArrayList<Integer> coefficientsY = new ArrayList<>();
         coefficientsY.add(1);
         PolynomialModP expY = new PolynomialModP(coefficientsY, modP, true);
-        System.out.println("Expected polynomial y: " + expY.toString());
 
         ArrayList<PolynomialModP> result = a.ExtEuclid(b);
         PolynomialModP x = result.get(0);
-        System.out.println("Result x: " + x.toString());
         PolynomialModP y = result.get(1);
-        System.out.println("Result y: " + y.toString());
         assertEquals(x, expX);
         assertEquals(y, expY);
 
@@ -386,7 +380,6 @@ public class PolynomialModPTest {
         coefficientsB.add(0);
         coefficientsB.add(2);
         PolynomialModP b = new PolynomialModP(coefficientsB, modP, true);
-        System.out.println("Polynomial b: " + b.toString());
 
         // expected answer gcd = x^2
         ArrayList<Integer> coefficientsGCD = new ArrayList<>();
@@ -394,13 +387,33 @@ public class PolynomialModPTest {
         coefficientsGCD.add(0);
         coefficientsGCD.add(1);
         PolynomialModP expGCD = new PolynomialModP(coefficientsGCD, modP, true);
-        System.out.println("Expected polynomial GCD: " + expGCD.toString());
 
         // get result and compare to expected
         PolynomialModP result = a.Euclid(b);
-        System.out.println("Result GCD: " + result.toString());
         assertEquals(expGCD, result);
 
+    }
+
+    @Test
+    public void congMod() throws CloneNotSupportedException {
+        int mod = 3;
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(2);
+        list1.add(0);
+        list1.add(0);
+        list1.add(1);
+        PolynomialModP pol1 = new PolynomialModP(list1, mod);
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(1);
+        PolynomialModP pol2 = new PolynomialModP(list2, mod);
+
+        ArrayList<Integer> mod1 = new ArrayList<>();
+        mod1.add(1);
+        mod1.add(1);
+        PolynomialModP pol3 = new PolynomialModP(mod1, mod);
+
+        assert(pol1.isCongMod(pol2, pol3));
     }
             
 }
