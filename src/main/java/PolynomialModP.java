@@ -187,8 +187,14 @@ public class PolynomialModP implements Cloneable {
         if(b == null) {
             throw new IllegalArgumentException("The polynomial parameter must not be null");
         }
+        if(b.terms.get(b.terms.size()-1).getNumber() == 0) {
+            removeLC0(b.terms);
+        }
+        if(b.getDegree() < 0) {
+            throw new IllegalArgumentException("The degree of the parameter must be greater than 0");
+        }
         PolynomialModP q = new PolynomialModP(new ArrayList<Integer>(), modPrime);
-        PolynomialModP r = (PolynomialModP) this.clone();
+        PolynomialModP r = this.clone();
         while(r.getDegree() >= b.getDegree()) {
             ArrayList<Integer> list = new ArrayList<>();
             for(int i = 0; i < r.getDegree() - b.getDegree(); i++) {
