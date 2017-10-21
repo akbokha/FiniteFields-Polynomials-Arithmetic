@@ -575,7 +575,7 @@ public class FiniteFieldTest {
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, p, false);
         FiniteField field = new FiniteField(poly, p);
-        // System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
+        //System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
 
         //construct expected ArrayList of elements of the field
         ArrayList<PolynomialModP> field_elements = new ArrayList<>();
@@ -611,8 +611,8 @@ public class FiniteFieldTest {
         //get result and compare to expected result
         ArrayList<PolynomialModP> result = field.findElements();
         for(int i = 0; i < field_elements.size(); i++){
-            // System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
-            // System.out.println("Result element " + i + ": " + result.get(i).toString());
+            //System.out.println("Expected element " + i + ": " + field_elements.get(i).toString() + " degree: " + field_elements.get(i).getDegree());
+            //System.out.println("Result element " + i + ": " + result.get(i).toString() + " degree: " + result.get(i).getDegree());
             assertEquals(field_elements.get(i).toString(), result.get(i).toString());
         }
     }

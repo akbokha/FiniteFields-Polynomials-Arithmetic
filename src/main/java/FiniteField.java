@@ -32,6 +32,20 @@ public class FiniteField implements Cloneable {
 
         field_elements = generateElements(field, field_elements, terms, field.polynomial.getDegree() - 1);
 
+        for (int i = 0; i < field_elements.size(); i++){
+            //ArrayList<IntegerModP> coefficients = field_elements.get(i).getTerms();
+
+            for(int j = field_elements.get(i).getTerms().size() - 1; j > 0; j--){
+                if (field_elements.get(i).getTerms().get(j).getNumber() == 0){
+                    field_elements.get(i).getTerms().remove(j);
+                }
+                else{
+                    break;
+                }
+            }
+
+        }
+
         return field_elements;
     }
 
