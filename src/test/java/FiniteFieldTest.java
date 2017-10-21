@@ -38,9 +38,9 @@ public class FiniteFieldTest {
         PolynomialModP expResultP = new PolynomialModP(expResultList, modP);
 
         PolynomialModP result = modPolynomialField.takeMod(f.getPolynomial());
-        System.out.println("divide " + p + " by " + modPolynomial);
-        System.out.println("expected polynomial: " + expResultP);
-        System.out.println("result long division: " + result);
+        // System.out.println("divide " + p + " by " + modPolynomial);
+        // System.out.println("expected polynomial: " + expResultP);
+        // System.out.println("result long division: " + result);
         assertEquals(expResultP, result);
     }
 
@@ -170,7 +170,7 @@ public class FiniteFieldTest {
 
     @Test
     public void quotient() throws Exception {
-                // example from finite field arithmetic wiki (Rijndael's finite field)
+        // example from finite field arithmetic wiki (Rijndael's finite field)
         // Z/2Z[X]
         int modP = 2;
         // d = x^8 + x^4+ x^3 + x + 1
@@ -220,6 +220,65 @@ public class FiniteFieldTest {
         // x * y mod d should result in the polyomial z: x^0 (1)
         // so z / y should result in x
         assertEquals(x, field.quotient(z, y));
+    }
+    
+    @Test
+    public void isIrreducible() throws Exception {
+        // in the context of Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x + 1
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(1); // 1
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: x
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        coeff2.add(1); // x
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // x should be irreducible (in the finite field in question)
+        // assertTrue(field.isIrreducible(x));
+    }
+    
+        @Test
+    public void isIrreducible2() throws Exception {
+        // in the context of Z/5Z[X]
+        int modP = 5;
+        // d = x^3 + 2x + 4
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(4); // 4
+        coeff.add(2); // 2x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^3 + 2x + 4)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: x^5 + 2x^3 + 4x^2
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(4); // 4x^2
+        coeff2.add(2); // 2x^3
+        coeff2.add(0);
+        coeff2.add(1); // x^5
+        PolynomialModP poly = new PolynomialModP(coeff2, modP);
+        
+        // x^5 + 2x^3 + 4x^2 should be reducible since it can be written as x^2(x^3+2x+4)
+        assertFalse(field.isIrreducible(poly));
     }
 
     @Test
@@ -477,7 +536,7 @@ public class FiniteFieldTest {
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, p, false);
         FiniteField field = new FiniteField(poly, p);
-        System.out.println("Field: R = Z/2Z, f = x^2 + x + 1");
+        // System.out.println("Field: R = Z/2Z, f = x^2 + x + 1");
 
         //construct expected ArrayList of elements of the field
         ArrayList<PolynomialModP> field_elements = new ArrayList<>();
@@ -495,8 +554,8 @@ public class FiniteFieldTest {
         //get result and compare to expected result
         ArrayList<PolynomialModP> result = field.findElements();
         for(int i = 0; i < field_elements.size(); i++){
-            System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
-            System.out.println("Result element " + i + ": " + result.get(i).toString());
+            // System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
+            // System.out.println("Result element " + i + ": " + result.get(i).toString());
             assertEquals(field_elements.get(i).toString(), result.get(i).toString());
         }
 
@@ -514,7 +573,7 @@ public class FiniteFieldTest {
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, p, false);
         FiniteField field = new FiniteField(poly, p);
-        System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
+        // System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
 
         //construct expected ArrayList of elements of the field
         ArrayList<PolynomialModP> field_elements = new ArrayList<>();
@@ -550,11 +609,10 @@ public class FiniteFieldTest {
         //get result and compare to expected result
         ArrayList<PolynomialModP> result = field.findElements();
         for(int i = 0; i < field_elements.size(); i++){
-            System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
-            System.out.println("Result element " + i + ": " + result.get(i).toString());
+            // System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
+            // System.out.println("Result element " + i + ": " + result.get(i).toString());
             assertEquals(field_elements.get(i).toString(), result.get(i).toString());
         }
-
     }
 
 

@@ -105,7 +105,6 @@ public class FiniteField implements Cloneable {
         
         // zero polynomial
         ArrayList<Integer> zero = new ArrayList<>();
-        zero.add(0);
         PolynomialModP polyZero = new PolynomialModP(zero, modP);
         
         if (poly.getDegree() > 1) { // constants / linear polynomails are irreducible 
