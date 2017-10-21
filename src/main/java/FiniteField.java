@@ -106,7 +106,16 @@ public class FiniteField implements Cloneable {
         if (n >= 1) { // constants / linear polynomails are irreducible 
             for (PolynomialModP fieldElement : fieldElements) {
                 if (fieldElement.getDegree() > 0) { // consider only non constant polynomials
-                    if (((poly.longDivision(fieldElement)[1]).getTerms()).isEmpty()) { // divisible (no remainder)
+                    boolean isDivisible = false;
+                    try {
+                        PolynomialModP rem = poly.longDivision(fieldElement)[1];
+                        if (rem.getTerms().isEmpty()) {
+                            isDivisible = true;
+                        }
+                    } catch (Exception e) {
+                        isDivisible = false;
+                    }
+                    if (isDivisible) { // divisible (no remainder)
                         if (n != fieldElement.getDegree()) {
                             isIrreducible = false;
                             return isIrreducible;
