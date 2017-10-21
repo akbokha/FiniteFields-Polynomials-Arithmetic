@@ -103,17 +103,13 @@ public class FiniteField implements Cloneable {
         int n = poly.getDegree();
         ArrayList<PolynomialModP> fieldElements = findElements();
         
-        // zero polynomial
-        ArrayList<Integer> zero = new ArrayList<>();
-        PolynomialModP polyZero = new PolynomialModP(zero, modP);
-        
-        if (poly.getDegree() > 1) { // constants / linear polynomails are irreducible 
+        if (n >= 1) { // constants / linear polynomails are irreducible 
             for (PolynomialModP fieldElement : fieldElements) {
                 if (fieldElement.getDegree() > 0) { // consider only non constant polynomials
-                    if (poly.longDivision(poly)[1].equals(polyZero)) { // divisible (no remainder)
+                    if (((poly.longDivision(fieldElement)[1]).getTerms()).isEmpty()) { // divisible (no remainder)
                         if (n != fieldElement.getDegree()) {
                             isIrreducible = false;
-                            break;
+                            return isIrreducible;
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 
 import org.junit.Test;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -226,9 +227,9 @@ public class FiniteFieldTest {
     public void isIrreducible() throws Exception {
         // in the context of Z/2Z[X]
         int modP = 2;
-        // d = x^8 + x^4+ x^3 + x + 1
+        // d = x^8 + x^4+ x^3 + x
         ArrayList<Integer> coeff = new ArrayList<>();
-        coeff.add(1); // 1
+        coeff.add(0);
         coeff.add(1); // x
         coeff.add(0);
         coeff.add(1); // x^3
@@ -245,11 +246,12 @@ public class FiniteFieldTest {
         // polynomial: x
         ArrayList<Integer> coeff2 = new ArrayList<>();
         coeff2.add(0);
-        coeff2.add(1); // x
+        coeff2.add(1);
         PolynomialModP x = new PolynomialModP(coeff2, modP);
+        System.out.println(x.getDegree());
         
         // x should be irreducible (in the finite field in question)
-        // assertTrue(field.isIrreducible(x));
+        assertTrue(field.isIrreducible(x));
     }
     
         @Test
