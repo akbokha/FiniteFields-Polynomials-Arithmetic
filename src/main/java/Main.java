@@ -162,7 +162,6 @@ public class Main {
                         "and prime divisors p1,...,pk of q-e and a in F in the form:"+polynomialForm);
                 String f1 = sc.nextLine();
                 ArrayList<Integer> field1 = extractPol(f1);
-                computePrimitive(field1, prime);
             }
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -171,10 +170,6 @@ public class Main {
         }
     }
 
-    private static void computePrimitive(ArrayList<Integer> field1, int prime) {
-        PolynomialModP f1 = new PolynomialModP(field1, prime, true);
-        /* TO DO call primitive instance */
-    }
 
     private static void computeMulTable(ArrayList<Integer> field1, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(field1, prime);

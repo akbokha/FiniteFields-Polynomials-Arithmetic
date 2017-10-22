@@ -1,6 +1,6 @@
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+
 /**
  *
  * @author Abdel K. Bokharouss
@@ -259,5 +259,45 @@ public class FiniteField implements Cloneable {
         }
 
         return result;
+    }
+
+    public boolean checkPrimitivity(ArrayList<Integer> field, int order) {
+        boolean isPrimitive = true;
+        int i = 1;
+        ArrayList<Integer> primeDivisors = computePrimeDivisors(order - 1);
+        while (valueInField(field, (int) Math.pow(primeDivisors.get(i), (order - 1)/primeDivisors.get(i))) != 1 && i <= field.size()-1) {
+            i++;
+        }
+        if (i <= field.size()) {
+            isPrimitive = false;
+        }
+        return isPrimitive;
+    }
+
+    public ArrayList<Integer> computePrimeDivisors(int n) {
+        ArrayList<Integer> result = new ArrayList<>();
+        // Print the number of 2s that divide n
+        for (int i = 2; i <= n; i++) {
+            while (n % i == 0) {
+                result.add(i);
+                n/= i;
+            }
+        }
+        Set<Integer> hs = new LinkedHashSet<>(result);
+        hs.addAll(result);
+        result.clear();
+        result.addAll(hs);
+
+        return result;
+    }
+
+    public Integer valueInField(ArrayList<Integer> field, int value) {
+        int a = 0;
+        for (int j = 0; j < field.size(); j++ ){
+            if (field.get(j) == 1) {
+                a += (int) Math.pow(value*field.get(j), j);
+            }
+        }
+        return a;
     }
 }

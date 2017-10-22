@@ -1,10 +1,43 @@
 
 import org.junit.Test;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
 public class FiniteFieldTest {
+    @Test
+    public void valueInField() throws Exception {
+        ArrayList<Integer> p = new ArrayList<Integer>();
+        PolynomialModP poly = new PolynomialModP(p, 2);
+        FiniteField field = new FiniteField(poly, 2);
+        ArrayList<Integer> polynomial = new ArrayList<>();
+        polynomial.add(1);
+        polynomial.add(1);
+        polynomial.add(1);
+        int expResult = 13;
+        int value = 3;
+        int result = field.valueInField(polynomial, value);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void computePrimeDivisors() throws Exception {
+        ArrayList<Integer> expResult = new ArrayList<>();
+        expResult.add(2);
+        expResult.add(3);
+        expResult.add(11);
+        ArrayList<Integer> p = new ArrayList<Integer>();
+        PolynomialModP poly = new PolynomialModP(p, 2);
+        FiniteField field = new FiniteField(poly, 2);
+        ArrayList<Integer> result = field.computePrimeDivisors(528);
+        for (int i = 0; i < expResult.size(); i++) {
+            System.out.println("expected: "+expResult.get(i));
+            System.out.println("result: "+result.get(i));
+            assertEquals(expResult.get(i), result.get(i));
+        }
+    }
 
     @Test
     public void takeMod() throws Exception {
