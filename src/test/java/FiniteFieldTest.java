@@ -221,6 +221,66 @@ public class FiniteFieldTest {
         // so z / y should result in x
         assertEquals(x, field.quotient(z, y));
     }
+    
+    @Test
+    public void isIrreducible() throws Exception {
+        // in the context of Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(0);
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: x
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        coeff2.add(1);
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // x should be irreducible (in the finite field in question)
+        assertTrue(field.isIrreducible(x));
+    }
+    
+    @Test
+    public void isIrreducible2() throws Exception {
+        // in the context of Z/5Z[X]
+        int modP = 5;
+        // d = x^3 + 2x + 4
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(4); // 4
+        coeff.add(2); // 2x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^3 + 2x + 4)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: x^5 + 2x^3 + 4x^2
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        coeff2.add(0);
+        coeff2.add(4); // 4x^2
+        coeff2.add(2); // 2x^3
+        coeff2.add(0);
+        coeff2.add(1); // x^5
+        PolynomialModP poly = new PolynomialModP(coeff2, modP);
+        
+        // x^5 + 2x^3 + 4x^2 should be reducible since it can be written as x^2(x^3+2x+4)
+        assertFalse(field.isIrreducible(poly));
+    }
+
 
     @Test
     public void MulTable() throws Exception {
