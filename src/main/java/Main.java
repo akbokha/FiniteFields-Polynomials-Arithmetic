@@ -17,9 +17,10 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
 
-        String startInfo = "Enter a number between 1 and 7. The numbers corresponds to the following calculations:\n"
+
+        String startInfo = "Enter a number between 1 and 8 or 0 to stop the program. The numbers corresponds to the following calculations:\n"
+                + "0: Stops the program\n"
                 + "1: Produces the sum, difference product of two polynomials and scalar multiple of one of the two" +
                 " polynomials\n"
                 + "2: Produces the quotient and remainder of two polynomials (Long division)\n"
@@ -28,147 +29,255 @@ public class Main {
                 + "5: Produces the addition and multiplication table of the field Z/p[X]/ q(X) of polynomial q(X)\n"
                 + "6: Upon input of two field elements a and b, produces the sum (a+b), " +
                 "product (a*b) and the quotient (a*b^-1)\n"
-                + "7: Checks primitivity of a field element; finds primitive elements in a field\n";
+                + "7: Checks irreducibility of a polynomial mod p\n"
+                + "8: produces irreducible polynomials of a prescribed degree";
 
         String polynomialForm = "in the form : c_0 + c_1 x + ....+ c_(n-1) x^(n-1) + c_n x^(e_n)";
         System.out.println(startInfo);
-        try {
-            String choice = sc.nextLine();
-            if (choice.equals("")) {
-                throw new Exception("input = null");
-            } else if (Integer.parseInt(choice) > 7 || Integer.parseInt(choice) < 1) {
-                throw new NumberFormatException("please enter a valid integer between 1 and 7");
-            } else if (choice.equals("1")) {
-                //input: two polynomials mod p
-                //output: sum, difference, product and scalar multiple
-                //polynomial calculations
-                try {
-                    int prime = enterTwoPolynomials(sc, polynomialForm);
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            try {
+                String choice = sc.nextLine();
+                if (choice.equals("")) {
+                    throw new Exception("input = null");
+                } else if (Integer.parseInt(choice) > 8) {
+                    throw new NumberFormatException();
+                } else if (choice.equals("0")) {
+                    break;
+                } if (choice.equals("1")) {
+                    //input: two polynomials mod p
+                    //output: sum, difference, product and scalar multiple
+                    //polynomial calculations
+                    while (true) {
+                        try {
+                            int prime = enterTwoPolynomials(sc, polynomialForm);
 
-                    String p1 = sc.nextLine();
-                    ArrayList<Integer> pol1 = extractPol(p1);
-                    String p2 = sc.nextLine();
-                    ArrayList<Integer> pol2 = extractPol(p2);
-                    System.out.println("Please enter 1*(integer) for scalar multiple of polynomial 1, " +
-                            "or 2*(integer) for scalar multiple of polynomial 2 for a given (integer)");
-                    String scalarChoice = sc.nextLine();
-                    int numberScalarM = Integer.parseInt(scalarChoice.substring(scalarChoice.lastIndexOf("*")+1));
-                    computeSum(pol1, pol2, prime);
-                    computeDiff(pol1, pol2, prime);
-                    computeProduct(pol1, pol2, prime);
-                    if (scalarChoice.startsWith("1")) {
-                        computeScalarM(pol1, prime, numberScalarM);
-                    } else {
-                        computeScalarM(pol2, prime, numberScalarM);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> pol1 = extractPol(p1);
+                            String p2 = sc.nextLine();
+                            ArrayList<Integer> pol2 = extractPol(p2);
+                            System.out.println("Please enter 1*(integer) for the scalar multiple of polynomial 1, " +
+                                    "or 2*(integer) for the scalar multiple of polynomial 2 for a given (integer)");
+                            String scalarChoice = sc.nextLine();
+                            int numberScalarM = Integer.parseInt(scalarChoice.substring(scalarChoice.lastIndexOf("*")+1));
+                            computeSum(pol1, pol2, prime);
+                            computeDiff(pol1, pol2, prime);
+                            computeProduct(pol1, pol2, prime);
+                            if (scalarChoice.startsWith("1")) {
+                                computeScalarM(pol1, prime, numberScalarM);
+                                break;
+                            } else if (scalarChoice.startsWith("0")) {
+                                computeScalarM(pol2, prime, numberScalarM);
+                                break;
+                            } else {
+                                System.out.println("please enter a number");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number. Restarting this operation...");
+                        }
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("please enter a valid number");
-                }
+                } else if (choice.equals("2")) {
+                    //input: two polynomials mod p
+                    //output: quotient and remainder
+                    //function:long division
+                    while (true) {
+                        try {
+                            System.out.println("This operation divides the first entered \n" +
+                                    "polynomial by the second entered polynomial");
+                            int prime = enterTwoPolynomials(sc, polynomialForm);
 
-            } else if (choice.equals("2")) {
-                //input: two polynomials mod p
-                //output: quotient and remainder
-                //function:long division
-                try {
-                    int prime = enterTwoPolynomials(sc, polynomialForm);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> pol1 = extractPol(p1);
+                            String p2 = sc.nextLine();
+                            ArrayList<Integer> pol2 = extractPol(p2);
+                            computeLongDivision(pol1, pol2, prime);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid prime number");
+                        }
+                    }
+                } else if (choice.equals("3")) {
+                    //input: two polynomials (x,y) mod p
+                    //output: x*a + y*b = gcd(x,y)
+                    //function: extended euclidean algorithm
+                    while (true) {
+                        try {
+                            System.out.println("This operation determines the gcd between the first entered \n" +
+                                    "polynomial and the second entered polynomial, where the first entered \n" +
+                                    "polynomial must be the polynomial with the largest degree.");
+                            int prime = enterTwoPolynomials(sc, polynomialForm);
 
-                    String p1 = sc.nextLine();
-                    ArrayList<Integer> pol1 = extractPol(p1);
-                    String p2 = sc.nextLine();
-                    ArrayList<Integer> pol2 = extractPol(p2);
-                    computeLongDivision(pol1, pol2, prime);
-                } catch (NumberFormatException e) {
-                    System.out.println("please enter a valid number");
-                }
-            } else if (choice.equals("3")) {
-                //input: two polynomials (x,y) mod p
-                //output: x*a + y*b = gcd(x,y)
-                //function: extended euclidian algorithm
-                try {
-                    int prime = enterTwoPolynomials(sc, polynomialForm);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> pol1 = extractPol(p1);
+                            String p2 = sc.nextLine();
+                            ArrayList<Integer> pol2 = extractPol(p2);
 
-                    String p1 = sc.nextLine();
-                    ArrayList<Integer> pol1 = extractPol(p1);
-                    String p2 = sc.nextLine();
-                    ArrayList<Integer> pol2 = extractPol(p2);
-
-                    System.out.println("Type 0 for Euclid's algorithm for polynomials, " +
-                            "or type 1 for the Extended Euclidian Algorithm for polynomials ");
-                    String euclid = sc.nextLine();
-                    if (euclid.equals("0")) {
-                        computeEuclidean(pol1, pol2, prime);
-                    } else {
-                        computeExtEuclidean(pol1, pol2, prime);
+                            System.out.println("Type 0 for Euclid's algorithm for polynomials, " +
+                                    "or type 1 for the Extended Euclidean Algorithm for polynomials ");
+                            String euclid = sc.nextLine();
+                            if (euclid.equals("0")) {
+                                computeEuclidean(pol1, pol2, prime);
+                            } else {
+                                computeExtEuclidean(pol1, pol2, prime);
+                            }
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("please enter a valid number");
+                        }
                     }
 
-                } catch (NumberFormatException e) {
-                    System.out.println("please enter a valid number");
-                }
+                } else if (choice.equals("4")) {
+                    //input: two polynomials (x,y) mod p, third polynomial z
+                    //output: true if (x,y) mod z == 0; false otherwise
+                    //function: congruent modulo
+                    while (true) {
+                        try {
+                            int prime = enterTwoPolynomials(sc, polynomialForm);
 
-            } else if (choice.equals("4")) {
-                //input: two polynomials (x,y) mod p, third polynomial z
-                //output: true if (x,y) mod z == 0; false otherwise
-                //function: congruent modulo
-                try {
-                    int prime = enterTwoPolynomials(sc, polynomialForm);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> pol1 = extractPol(p1);
+                            String p2 = sc.nextLine();
+                            ArrayList<Integer> pol2 = extractPol(p2);
+                            System.out.println("Please enter a third polynomial (the modulo)"+ polynomialForm);
+                            String p3 = sc.nextLine();
+                            ArrayList<Integer> pol3 = extractPol(p3);
+                            computeCongruenceMod(pol1, pol2, pol3, prime);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number");
+                        }
+                    }
 
-                    String p1 = sc.nextLine();
-                    ArrayList<Integer> pol1 = extractPol(p1);
-                    String p2 = sc.nextLine();
-                    ArrayList<Integer> pol2 = extractPol(p2);
-                    System.out.println("Please enter a third polynomial (the modulo)"+ polynomialForm);
-                    String p3 = sc.nextLine();
-                    ArrayList<Integer> pol3 = extractPol(p3);
-                    computeCongruenceMod(pol1, pol2, pol3, prime);
-                } catch (NumberFormatException e) {
-                    System.out.println("please enter a valid number");
+                } else if (choice.equals("5")) {
+                    //input: prime p and irreducible polynomial q(x)
+                    //output: addition and multiplication table of the field
+                    //Z/pZ[x] / q(x)
+                    while (true) {
+                        try {
+                            System.out.println("Please enter a prime number");
+                            int prime = Integer.parseInt(sc.nextLine());
+                            System.out.println("Please enter an irreducible polynomial"+polynomialForm);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> pol1 = extractPol(p1);
+                            computeMulTable(pol1, prime);
+                            computeAddTable(pol1, prime);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number");
+                        }
+                    }
+
+                    //produce addition and multiplication table of the field
+                } else if (choice.equals("6")) {
+                    //input: two field elements a and b
+                    //output: a+b, a*b, a*b^-1 (if b!=0)
+                    //function: ext. eucld. algo for b^-1, and ....
+                    while (true) {
+                        try {
+                            System.out.println("Please enter a prime number");
+                            int prime = Integer.parseInt(sc.nextLine());
+                            System.out.println("Please enter two field elements a and b in the form:"+polynomialForm);
+                            String f1 = sc.nextLine();
+                            String f2 = sc.nextLine();
+                            ArrayList<Integer> fieldElement1 = extractPol(f1);
+                            ArrayList<Integer> fieldElement2 = extractPol(f2);
+                            computeSumFields(fieldElement1, fieldElement2, prime);
+                            computeProductFields(fieldElement1, fieldElement2, prime);
+                            computeProductInverse(fieldElement1, fieldElement2, prime);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number");
+                        }
+                    }
+                } else if (choice.equals("7")) {
+                    //input: polynomial mod p in field
+                    //output: check irreducibility of polynomial + produces
+                    while (true) {
+                        try {
+                            System.out.println("Please enter a prime number");
+                            int prime = Integer.parseInt(sc.nextLine());
+                            System.out.println("Please enter a field F in the form:"+polynomialForm);
+                            String f1 = sc.nextLine();
+                            System.out.println("Please enter a polynomial in F in the form:"+polynomialForm);
+                            String p1 = sc.nextLine();
+                            ArrayList<Integer> field1 = extractPol(f1);
+                            ArrayList<Integer> poly1 = extractPol(p1);
+                            checkIrreducibility(field1, poly1, prime);
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Please enter a valid number");
+                        }
+                    }
+
+                } else if (choice.equals("8")) {
+                    //input: field and degree
+                    //output: irreducible polynomial in field of degree n
+                    try {
+                        System.out.println("Please enter a prime number");
+                        int prime = Integer.parseInt(sc.nextLine());
+                        System.out.println("Please enter a field F in the form:"+polynomialForm);
+                        String f1 = sc.nextLine();
+                        System.out.println("Please enter the degree of which you want to produce a irreducible polynomial of");
+                        int deg = Integer.parseInt(sc.nextLine());
+
+                        ArrayList<Integer> field1 = extractPol(f1);
+                        computeIrrPolynomial(field1, prime, deg);
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please enter a valid number");
+                    }
                 }
-            } else if (choice.equals("5")) {
-                //input: prime p and irreducible polynomial q(x)
-                //output: addition and multiplication table of the field
-                //Z/pZ[x] / q(x)
-                try {
-                    System.out.println("Please enter a prime number");
-                    int prime = Integer.parseInt(sc.nextLine());
-                    System.out.println("Please enter an irreducible polynomial"+polynomialForm);
-                    String p1 = sc.nextLine();
-                    ArrayList<Integer> pol1 = extractPol(p1);
-                    computeMulTable(pol1, prime);
-                    computeAddTable(pol1, prime);
-                } catch (NumberFormatException e) {
-                    System.out.println("please enter a valid number");
-                }
-                //produce addition and multiplication table of the field
-            } else if (choice.equals("6")) {
-                //input: two field elements a and b
-                //output: a+b, a*b, a*b^-1 (if b!=0)
-                //function: ext. eucld. algo for b^-1, and ....
-                System.out.println("please enter a prime number");
-                int prime = Integer.parseInt(sc.nextLine());
-                System.out.println("Please enter two field elements a and b in the form:"+polynomialForm);
-                String f1 = sc.nextLine();
-                String f2 = sc.nextLine();
-                ArrayList<Integer> fieldElement1 = extractPol(f1);
-                ArrayList<Integer> fieldElement2 = extractPol(f2);
-                //computeSumFields(fieldElement1, fieldElement2, prime);
-                //computeProductFields(fieldElement1, field2Element2, prime);
-                //computeProductInverse(fieldElement1, fieldElement2, prime);
-            } else if (choice.equals("7")) {
-                //input: field element
-                //output: check primitivy of a field element
-                //function: algo 3.4.3, 3.4.4
-                System.out.println("please enter a prime number");
-                int prime = Integer.parseInt(sc.nextLine());
-                System.out.println("Please enter a field F of order q " +
-                        "and prime divisors p1,...,pk of q-e and a in F in the form:"+polynomialForm);
-                String f1 = sc.nextLine();
-                ArrayList<Integer> field1 = extractPol(f1);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid integer between 1 and 7");
+            } catch (Exception e){
+                System.out.println(e);
             }
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        } catch (Exception e){
-            System.out.println(e);
         }
+    }
+
+    private static void checkIrreducibility(ArrayList<Integer> field1, ArrayList<Integer> poly1, int prime) throws CloneNotSupportedException {
+        PolynomialModP polField = new PolynomialModP(field1, prime);
+        PolynomialModP p1 = new PolynomialModP(poly1, prime);
+        FiniteField field = new FiniteField(polField, prime);
+        boolean isIrreducible = field.isIrreducible(p1);
+        String reducible = "";
+        if (!isIrreducible) {
+            reducible = "not";
+        }
+        System.out.println(p1.toString() + " is "+reducible+" irreducible in F(x) = "+polField.toString());
+    }
+
+    private static void computeIrrPolynomial(ArrayList<Integer> field1, int prime, int deg) throws CloneNotSupportedException {
+        PolynomialModP p2 = new PolynomialModP(field1, prime);
+        FiniteField f1 = new FiniteField(p2, prime);
+        System.out.println("An irreducible polynomial in "+p2+" is "+ f1.produceIrreduciblePoly(deg).toString());
+    }
+
+    private static void computeProductInverse(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) throws CloneNotSupportedException {
+        PolynomialModP p1 = new PolynomialModP(fieldElement1, prime);
+        PolynomialModP p2 = new PolynomialModP(fieldElement2, prime);
+        FiniteField f1 = new FiniteField(p1, prime);
+        PolynomialModP result = f1.inverse(p2);
+        if (result == null) {
+            System.out.println("The inverse of "+p2+ " does not exist");
+        } else {
+            System.out.println("The product of "+p1.toString()+" and "+result.toString()+" (mod) "+prime+" = "+ f1.quotient(p1, p2));
+        }
+    }
+
+    private static void computeProductFields(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(fieldElement1, prime, false);
+        PolynomialModP p2 = new PolynomialModP(fieldElement2, prime, false);
+        FiniteField f1 = new FiniteField(p1, prime);
+        System.out.println("The product of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ f1.product(p1, p2).toString());
+    }
+
+    private static void computeSumFields(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
+        PolynomialModP p1 = new PolynomialModP(fieldElement1, prime, false);
+        PolynomialModP p2 = new PolynomialModP(fieldElement2, prime, false);
+        FiniteField f1 = new FiniteField(p1, prime);
+        FiniteField f2 = new FiniteField(p2, prime);
+        System.out.println("The sum of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ f1.sum(p1, p2).toString());
     }
 
 
@@ -199,56 +308,64 @@ public class Main {
                 System.out.print(result[i][j].getPolynomial());
                 System.out.print("\t\t");
             }
-            System.out.println();
+            System.out.println("");
         }
     }
 
-    private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) {
+    private static void computeCongruenceMod(ArrayList<Integer> pol1, ArrayList<Integer> pol2, ArrayList<Integer> pol3, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
         PolynomialModP p3 = new PolynomialModP(pol3, prime, true );
-        //System.out.println(p1 + " and "+p2+"are congruent modulo "+p3);
+        boolean isCong = p1.isCongMod(p2, p3);
+        String congruence = "";
+        if (!isCong) {
+            congruence = "not";
+        }
+        System.out.println(p1 +" and "+p2+" are "+congruence+" modulus "+p3);
     }
 
-    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
+    private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
-        //System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1+"*a + "+p2+"*b = "+ p1.ExtEuclid(p2));
+        System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1+"*" +p1.ExtEuclid(p2).get(0).toString() + " " +
+                "+ "+p2+"*"+ p1.ExtEuclid(p2).get(1).toString() +" = "+ p1.Euclid(p2).toString());
     }
 
     private static void computeEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
-        System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1.Euclid(p2));
+        System.out.println("gcd("+p1+","+p2+") (mod) "+prime+" = "+p1.Euclid(p2).toString());
     }
 
     private static void computeLongDivision(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true );
-        System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" results in quotient: "+ (p1.longDivision(p2)[0]).toString()+ " and remainder: " + (p1.longDivision(p2)[1]).toString());
+        System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" results in quotient: "+
+                (p1.longDivision(p2)[0]).toString()+ " and remainder: " + (p1.longDivision(p2)[1]).toString());
     }
 
     private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
-        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) "+prime+"= "+p1.product(numberScalarM));
+        System.out.println("The scalar multiple of "+p1+" * "+numberScalarM+" (mod) "
+                +prime+"= "+p1.product(numberScalarM).toString());
     }
 
     private static void computeProduct(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
-        System.out.println("The product of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.product(p2));
+        System.out.println("The product of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.product(p2).toString());
     }
 
     private static void computeDiff(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
-        System.out.println("The difference of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.difference(p2));
+        System.out.println("The difference of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.difference(p2).toString());
     }
 
     private static void computeSum(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true);
-        System.out.println("The sum of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.sum(p2));
+        System.out.println("The sum of "+p1+" and "+p2+" (mod) "+prime+" = "+p1.sum(p2).toString());
     }
 
     /**
@@ -345,7 +462,7 @@ public class Main {
      * @return modulo (prime) number
      */
     private static int enterTwoPolynomials(Scanner sc, String polynomialForm) {
-        System.out.println("please enter a prime number");
+        System.out.println("Please enter a prime number");
         int prime = Integer.parseInt(sc.nextLine());
         System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
         return prime;
