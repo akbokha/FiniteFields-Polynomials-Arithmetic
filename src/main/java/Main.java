@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.lang.Integer.max;
+import java.util.Arrays;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -147,11 +148,11 @@ public class Main {
                 System.out.println("Please enter two field elements a and b in the form:"+polynomialForm);
                 String f1 = sc.nextLine();
                 String f2 = sc.nextLine();
-                ArrayList<Integer> field1 = extractPol(f1);
-                ArrayList<Integer> field2 = extractPol(f2);
-                //computeSumFields(field1, field2, prime);
-                //computeProductFields(field1, field2, prime);
-                //computeProductInverse(field1, field2, prime);
+                ArrayList<Integer> fieldElement1 = extractPol(f1);
+                ArrayList<Integer> fieldElement2 = extractPol(f2);
+                //computeSumFields(fieldElement1, fieldElement2, prime);
+                //computeProductFields(fieldElement1, field2Element2, prime);
+                //computeProductInverse(fieldElement1, fieldElement2, prime);
             } else if (choice.equals("7")) {
                 //input: field element
                 //output: check primitivy of a field element
@@ -224,7 +225,7 @@ public class Main {
     private static void computeLongDivision(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(pol1, prime, true);
         PolynomialModP p2 = new PolynomialModP(pol2, prime, true );
-        System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" = "+p1.longDivision(p2));
+        System.out.println("Long division: divide "+p1+" by "+p2+" (mod) "+prime+" results in quotient: "+ (p1.longDivision(p2)[0]).toString()+ " and remainder: " + (p1.longDivision(p2)[1]).toString());
     }
 
     private static void computeScalarM(ArrayList<Integer> pol1, int prime, int numberScalarM) throws CloneNotSupportedException {

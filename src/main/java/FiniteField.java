@@ -32,6 +32,20 @@ public class FiniteField implements Cloneable {
 
         field_elements = generateElements(field, field_elements, terms, field.polynomial.getDegree() - 1);
 
+        for (int i = 0; i < field_elements.size(); i++){
+            //ArrayList<IntegerModP> coefficients = field_elements.get(i).getTerms();
+
+            for(int j = field_elements.get(i).getTerms().size() - 1; j > 0; j--){
+                if (field_elements.get(i).getTerms().get(j).getNumber() == 0){
+                    field_elements.get(i).getTerms().remove(j);
+                }
+                else{
+                    break;
+                }
+            }
+
+        }
+
         return field_elements;
     }
 
@@ -103,18 +117,22 @@ public class FiniteField implements Cloneable {
         int n = poly.getDegree();
         ArrayList<PolynomialModP> fieldElements = findElements();
         
-        // zero polynomial
-        ArrayList<Integer> zero = new ArrayList<>();
-        zero.add(0);
-        PolynomialModP polyZero = new PolynomialModP(zero, modP);
-        
-        if (poly.getDegree() > 1) { // constants / linear polynomails are irreducible 
+        if (n >= 1) { // constants / linear polynomails are irreducible 
             for (PolynomialModP fieldElement : fieldElements) {
                 if (fieldElement.getDegree() > 0) { // consider only non constant polynomials
-                    if (poly.longDivision(poly)[1].equals(polyZero)) { // divisible (no remainder)
+                    boolean isDivisible = false;
+                    try {
+                        PolynomialModP rem = poly.longDivision(fieldElement)[1];
+                        if (rem.getTerms().isEmpty()) {
+                            isDivisible = true;
+                        }
+                    } catch (Exception e) {
+                        isDivisible = false;
+                    }
+                    if (isDivisible) { // divisible (no remainder)
                         if (n != fieldElement.getDegree()) {
                             isIrreducible = false;
-                            break;
+                            return isIrreducible;
                         }
                     }
                 }
