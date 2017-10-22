@@ -110,9 +110,13 @@ public class FiniteField implements Cloneable {
      * Check the reducibility of a polynomial in this finite field
      * @param poly the polynomial of which the reducibility is checked
      * @return true if poly is irreducible in this, false otherwise
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
+     * @thros IllegalArgumentException if {@code poly.getDegree() <= 0}
      */
-    public boolean isIrreducible (PolynomialModP poly) throws CloneNotSupportedException {
+    public boolean isIrreducible (PolynomialModP poly) throws CloneNotSupportedException, IllegalArgumentException {
+        if (poly.getDegree() <= 0) {
+            throw new IllegalArgumentException("the polynomial should have a degree >= 1");
+        }
         boolean isIrreducible = true;
         int n = poly.getDegree();
         ArrayList<PolynomialModP> fieldElements = findElements();
@@ -148,8 +152,12 @@ public class FiniteField implements Cloneable {
      * @param deg the degree of the irreducible polynomial we want
      * @return a polynomial p of degree n such that isIrreducible(p)
      * @throws CloneNotSupportedException 
+     * @throws IllegalArgumentException if {@code deg <= 0}
      */
-    public PolynomialModP produceIrreduciblePoly(int deg) throws CloneNotSupportedException {
+    public PolynomialModP produceIrreduciblePoly(int deg) throws CloneNotSupportedException, IllegalArgumentException {
+        if (deg <= 0) {
+            throw new IllegalArgumentException("The specified degree should be > 0");
+        }
         Random random = new Random();
         
         // produce a random polynomial of degree deg
@@ -163,8 +171,9 @@ public class FiniteField implements Cloneable {
                     coeff++;
                 }
                 coefficients.add(coeff);
-            }
-            coefficients.add(random.nextInt(modP)); 
+            } else { // not the leading coefficient
+                coefficients.add(random.nextInt(modP));
+            } 
         }
         irrPoly = new PolynomialModP(coefficients, modP);
         
@@ -173,13 +182,16 @@ public class FiniteField implements Cloneable {
             ArrayList<Integer> newCoefficients = new ArrayList<>();
             for (int i = 0; i <= deg; i++) {
                 if (i == deg) { // if leading coefficient would become 0, then degree would be deg - 1 
-                    int coeff = random.nextInt(modP);
-                    if (coeff == 0) {
-                        coeff++;
+                    int newCoeff = random.nextInt(modP);
+                    if (newCoeff == 0) {
+                        newCoeff++;
                     }
-                    newCoefficients.add(coeff);
+                    newCoefficients.add(newCoeff); 
                 }
-            newCoefficients.add(random.nextInt(modP)); 
+                else {
+                    newCoefficients.add(random.nextInt(modP)); 
+                }
+            
             }
             irrPoly = new PolynomialModP(newCoefficients, modP);
         }

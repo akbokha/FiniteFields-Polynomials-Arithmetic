@@ -266,7 +266,7 @@ public class FiniteFieldTest {
 
         // considering finite field: Z/2Z[X]/(x^3 + 2x + 4)
         FiniteField field = new FiniteField(d, modP);
-        
+//        
         // polynomial: x^5 + 2x^3 + 4x^2
         ArrayList<Integer> coeff2 = new ArrayList<>();
         coeff2.add(0);
@@ -279,6 +279,25 @@ public class FiniteFieldTest {
         
         // x^5 + 2x^3 + 4x^2 should be reducible since it can be written as x^2(x^3+2x+4)
         assertFalse(field.isIrreducible(poly));
+    }
+    
+    @Test
+    public void produceIrreducible() throws CloneNotSupportedException {
+        //construct finite field R = Z/2Z, f = x^3 + x + 1
+        int p = 2;
+        ArrayList<Integer> terms = new ArrayList<>();
+        terms.add(1);
+        terms.add(1);
+        terms.add(0);
+        terms.add(1);
+        PolynomialModP poly = new PolynomialModP(terms, p);
+        FiniteField field = new FiniteField(poly, p);
+        for (int i = 1; i <= 10; i++) {
+            PolynomialModP result = field.produceIrreduciblePoly(i);
+            // System.out.println(result.getTerms());
+            // System.out.println("degree: " + i + " irr.poly: " + result.toString() + " w/ deg: " + result.getDegree() + " isIrreducible: " + field.isIrreducible(result));
+            assertTrue(field.isIrreducible(result));
+        }
     }
 
 
