@@ -51,7 +51,9 @@ public class Main {
                     while (true) {
                         try {
                             int prime = enterTwoPolynomials(sc, polynomialForm);
-
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             String p1 = sc.nextLine();
                             ArrayList<Integer> pol1 = extractPol(p1);
                             String p2 = sc.nextLine();
@@ -70,7 +72,7 @@ public class Main {
                             }
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid number. Restarting this operation...");
+                            System.out.println("Please enter a valid prime number.");
                         }
                     }
                 } else if (choice.equals("2")) {
@@ -82,7 +84,9 @@ public class Main {
                             System.out.println("This operation divides the first entered \n" +
                                     "polynomial by the second entered polynomial");
                             int prime = enterTwoPolynomials(sc, polynomialForm);
-
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             String p1 = sc.nextLine();
                             ArrayList<Integer> pol1 = extractPol(p1);
                             String p2 = sc.nextLine();
@@ -102,7 +106,9 @@ public class Main {
                             System.out.println("This operation determines the gcd between the first entered \n" +
                                     "polynomial and the second entered polynomial");
                             int prime = enterTwoPolynomials(sc, polynomialForm);
-
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             String p1 = sc.nextLine();
                             ArrayList<Integer> pol1 = extractPol(p1);
                             String p2 = sc.nextLine();
@@ -118,7 +124,7 @@ public class Main {
                             }
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("please enter a valid number");
+                            System.out.println("please enter a valid prime number");
                         }
                     }
 
@@ -131,7 +137,9 @@ public class Main {
                             System.out.println("This operation checks if the first polynomial (a) and second " +
                                     "polynomial (b) are congruent modulo d, notation: a = b mod d");
                             int prime = enterTwoPolynomials(sc, polynomialForm);
-
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             String p1 = sc.nextLine();
                             ArrayList<Integer> pol1 = extractPol(p1);
                             String p2 = sc.nextLine();
@@ -142,7 +150,7 @@ public class Main {
                             computeCongruenceMod(pol1, pol2, pol3, prime);
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid number");
+                            System.out.println("Please enter a valid prime number");
                         }
                     }
 
@@ -154,6 +162,9 @@ public class Main {
                         try {
                             System.out.println("Please enter a prime number");
                             int prime = Integer.parseInt(sc.nextLine());
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             System.out.println("Please enter an irreducible polynomial"+polynomialForm);
                             String p1 = sc.nextLine();
                             ArrayList<Integer> pol1 = extractPol(p1);
@@ -161,7 +172,7 @@ public class Main {
                             computeAddTable(pol1, prime);
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid number");
+                            System.out.println("Please enter a valid prime number");
                         }
                     }
 
@@ -174,6 +185,9 @@ public class Main {
                         try {
                             System.out.println("Please enter a prime number");
                             int prime = Integer.parseInt(sc.nextLine());
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             System.out.println("Please enter a field F in the form:"+polynomialForm);
                             String field = sc.nextLine();
                             System.out.println("Please enter two field elements a and b in F in the form:"+polynomialForm);
@@ -187,7 +201,7 @@ public class Main {
                             computeProductInverse(fieldF, fieldElement1, fieldElement2, prime);
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid number");
+                            System.out.println("Please enter a valid prime number");
                         }
                     }
                 } else if (choice.equals("7")) {
@@ -197,6 +211,9 @@ public class Main {
                         try {
                             System.out.println("Please enter a prime number");
                             int prime = Integer.parseInt(sc.nextLine());
+                            if (!isPrime(prime)) {
+                                throw new NumberFormatException();
+                            }
                             System.out.println("Please enter a field F in the form:"+polynomialForm);
                             String f1 = sc.nextLine();
                             System.out.println("Please enter a polynomial in F in the form:"+polynomialForm +" with " +
@@ -207,7 +224,7 @@ public class Main {
                             checkIrreducibility(field1, poly1, prime);
                             break;
                         } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid number");
+                            System.out.println("Please enter a valid prime number");
                         }
                     }
 
@@ -217,6 +234,9 @@ public class Main {
                     try {
                         System.out.println("Please enter a prime number");
                         int prime = Integer.parseInt(sc.nextLine());
+                        if (!isPrime(prime)) {
+                            throw new NumberFormatException();
+                        }
                         System.out.println("Please enter a field F in the form:"+polynomialForm);
                         String f1 = sc.nextLine();
                         System.out.println("Please enter a degree > 0");
@@ -226,7 +246,7 @@ public class Main {
                         computeIrrPolynomial(field1, prime, deg);
 
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid number");
+                        System.out.println("Please enter a valid prime number");
                     }
                 }
             } catch (NumberFormatException e) {
@@ -471,5 +491,22 @@ public class Main {
         int prime = Integer.parseInt(sc.nextLine());
         System.out.println("Please enter two polynomials (mod "+prime+") "+  polynomialForm);
         return prime;
+    }
+
+    /**
+     * Checks whether a number is prime or not
+     * @param n input number that has to be checked
+     * @return true if number is prime, false otherwise
+     */
+    static boolean isPrime(int n) {
+        if (n%2==0) {
+            return false;
+        }
+        for (int i = 3; i*i <= n; i+=2) {
+            if (n%i==0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
