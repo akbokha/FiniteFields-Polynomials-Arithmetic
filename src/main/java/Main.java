@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.lang.Integer.max;
-import java.util.Arrays;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,13 +27,14 @@ public class Main {
                 + "4: Checks whether two polynomials in the mod p setting are equal modulo a third polynomial\n"
                 + "5: Produces the addition and multiplication table of the field Z/p[X]/ q(X) of polynomial q(X)\n"
                 + "6: Upon input of two field elements a and b, produces the sum (a+b), " +
-                "product (a*b) and the quotient (a*b^-1)\n"
+                "product (a*b) and the quotient (a*b^-1) in a field F\n"
                 + "7: Checks irreducibility of a polynomial mod p\n"
                 + "8: produces irreducible polynomials of a prescribed degree";
 
         String polynomialForm = "in the form : c_0 + c_1 x + ....+ c_(n-1) x^(n-1) + c_n x^(e_n)";
         System.out.println(startInfo);
         while (true) {
+            System.out.println("Enter a number between 1 and 8 or 0 to stop the program");
             Scanner sc = new Scanner(System.in);
             try {
                 String choice = sc.nextLine();
@@ -65,13 +65,10 @@ public class Main {
                             computeProduct(pol1, pol2, prime);
                             if (scalarChoice.startsWith("1")) {
                                 computeScalarM(pol1, prime, numberScalarM);
-                                break;
                             } else if (scalarChoice.startsWith("0")) {
                                 computeScalarM(pol2, prime, numberScalarM);
-                                break;
-                            } else {
-                                System.out.println("please enter a number");
                             }
+                            break;
                         } catch (NumberFormatException e) {
                             System.out.println("Please enter a valid number. Restarting this operation...");
                         }
@@ -103,8 +100,7 @@ public class Main {
                     while (true) {
                         try {
                             System.out.println("This operation determines the gcd between the first entered \n" +
-                                    "polynomial and the second entered polynomial, where the first entered \n" +
-                                    "polynomial must be the polynomial with the largest degree.");
+                                    "polynomial and the second entered polynomial");
                             int prime = enterTwoPolynomials(sc, polynomialForm);
 
                             String p1 = sc.nextLine();
@@ -132,6 +128,8 @@ public class Main {
                     //function: congruent modulo
                     while (true) {
                         try {
+                            System.out.println("This operation checks if the first polynomial (a) and second " +
+                                    "polynomial (b) are congruent modulo d, notation: a = b mod d");
                             int prime = enterTwoPolynomials(sc, polynomialForm);
 
                             String p1 = sc.nextLine();
@@ -176,14 +174,17 @@ public class Main {
                         try {
                             System.out.println("Please enter a prime number");
                             int prime = Integer.parseInt(sc.nextLine());
-                            System.out.println("Please enter two field elements a and b in the form:"+polynomialForm);
+                            System.out.println("Please enter a field F in the form:"+polynomialForm);
+                            String field = sc.nextLine();
+                            System.out.println("Please enter two field elements a and b in F in the form:"+polynomialForm);
                             String f1 = sc.nextLine();
                             String f2 = sc.nextLine();
                             ArrayList<Integer> fieldElement1 = extractPol(f1);
                             ArrayList<Integer> fieldElement2 = extractPol(f2);
-                            computeSumFields(fieldElement1, fieldElement2, prime);
-                            computeProductFields(fieldElement1, fieldElement2, prime);
-                            computeProductInverse(fieldElement1, fieldElement2, prime);
+                            ArrayList<Integer> fieldF = extractPol(field);
+                            computeSumFields(fieldF, fieldElement1, fieldElement2, prime);
+                            computeProductFields(fieldF, fieldElement1, fieldElement2, prime);
+                            computeProductInverse(fieldF, fieldElement1, fieldElement2, prime);
                             break;
                         } catch (NumberFormatException e) {
                             System.out.println("Please enter a valid number");
@@ -198,7 +199,8 @@ public class Main {
                             int prime = Integer.parseInt(sc.nextLine());
                             System.out.println("Please enter a field F in the form:"+polynomialForm);
                             String f1 = sc.nextLine();
-                            System.out.println("Please enter a polynomial in F in the form:"+polynomialForm);
+                            System.out.println("Please enter a polynomial in F in the form:"+polynomialForm +" with " +
+                                    "degree > 1");
                             String p1 = sc.nextLine();
                             ArrayList<Integer> field1 = extractPol(f1);
                             ArrayList<Integer> poly1 = extractPol(p1);
@@ -217,12 +219,12 @@ public class Main {
                         int prime = Integer.parseInt(sc.nextLine());
                         System.out.println("Please enter a field F in the form:"+polynomialForm);
                         String f1 = sc.nextLine();
-                        System.out.println("Please enter the degree of which you want to produce a irreducible polynomial of");
+                        System.out.println("Please enter a degree > 0");
                         int deg = Integer.parseInt(sc.nextLine());
 
                         ArrayList<Integer> field1 = extractPol(f1);
                         computeIrrPolynomial(field1, prime, deg);
-                        break;
+
                     } catch (NumberFormatException e) {
                         System.out.println("Please enter a valid number");
                     }
@@ -253,38 +255,40 @@ public class Main {
         System.out.println("An irreducible polynomial in "+p2+" is "+ f1.produceIrreduciblePoly(deg).toString());
     }
 
-    private static void computeProductInverse(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) throws CloneNotSupportedException {
+    private static void computeProductInverse(ArrayList<Integer> fieldF, ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(fieldElement1, prime);
         PolynomialModP p2 = new PolynomialModP(fieldElement2, prime);
-        FiniteField f1 = new FiniteField(p1, prime);
-        PolynomialModP result = f1.inverse(p2);
+        PolynomialModP polField = new PolynomialModP(fieldF, prime);
+        FiniteField field = new FiniteField(polField, prime);
+        PolynomialModP result = field.inverse(p2);
         if (result == null) {
-            System.out.println("The inverse of "+p2+ " does not exist");
+            System.out.println("The inverse of "+p2.toString()+ " in "+ polField.toString() +"does not exist");
         } else {
-            System.out.println("The product of "+p1.toString()+" and "+result.toString()+" (mod) "+prime+" = "+ f1.quotient(p1, p2));
+            System.out.println("The product of "+p1.toString()+" and "+result.toString()+" (mod) "+prime+" = "+ field.quotient(p1, p2));
         }
     }
 
-    private static void computeProductFields(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
+    private static void computeProductFields(ArrayList<Integer> fieldF, ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
         PolynomialModP p1 = new PolynomialModP(fieldElement1, prime, false);
         PolynomialModP p2 = new PolynomialModP(fieldElement2, prime, false);
-        FiniteField f1 = new FiniteField(p1, prime);
-        System.out.println("The product of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ f1.product(p1, p2).toString());
+        PolynomialModP polField = new PolynomialModP(fieldF, prime);
+        FiniteField field = new FiniteField(polField, prime);
+        System.out.println("The product of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ field.product(p1, p2).toString());
     }
 
-    private static void computeSumFields(ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
+    private static void computeSumFields(ArrayList<Integer> fieldF, ArrayList<Integer> fieldElement1, ArrayList<Integer> fieldElement2, int prime) {
         PolynomialModP p1 = new PolynomialModP(fieldElement1, prime, false);
         PolynomialModP p2 = new PolynomialModP(fieldElement2, prime, false);
-        FiniteField f1 = new FiniteField(p1, prime);
-        FiniteField f2 = new FiniteField(p2, prime);
-        System.out.println("The sum of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ f1.sum(p1, p2).toString());
+        PolynomialModP polField = new PolynomialModP(fieldF, prime);
+        FiniteField field = new FiniteField(polField, prime);
+        System.out.println("The sum of "+p1.toString()+" and "+p2.toString()+" (mod) "+prime+" = "+ field.sum(p1, p2).toString());
     }
 
 
     private static void computeMulTable(ArrayList<Integer> field1, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(field1, prime);
         FiniteField f1 = new FiniteField(p1, prime);
-        System.out.println("The multiplication table of "+p1+" in Z/"+prime+"Z is: ");
+        System.out.println("The multiplication table of the field Z/"+prime+ "Z / "+p1+" is: ");
 
         FiniteField[][] result = f1.mulTable(field1, p1.getDegree());
         for (int i = 0; i < result.length; i++) {
@@ -300,7 +304,7 @@ public class Main {
     private static void computeAddTable(ArrayList<Integer> field1, int prime) throws CloneNotSupportedException {
         PolynomialModP p1 = new PolynomialModP(field1, prime);
         FiniteField f1 = new FiniteField(p1, prime);
-        System.out.println("The addition table of "+p1+" in Z/"+prime+"Z is: ");
+        System.out.println("The addition table of the field Z/"+prime+ "Z / "+p1+" is: ");
         FiniteField[][] result = f1.mulTable(field1, p1.getDegree());
 
         for (int i = 0; i < result.length; i++) {
@@ -321,7 +325,7 @@ public class Main {
         if (!isCong) {
             congruence = "not";
         }
-        System.out.println(p1 +" and "+p2+" are "+congruence+" modulus "+p3);
+        System.out.println(p1 +" and "+p2+" are "+congruence+" congruent modulus "+p3);
     }
 
     private static void computeExtEuclidean(ArrayList<Integer> pol1, ArrayList<Integer> pol2, int prime) throws CloneNotSupportedException {
@@ -448,6 +452,7 @@ public class Main {
      * @return {@code String[] terms}, where each element represent a term (coefficient * x)
      */
     private static String[] stripInput (String input) {
+        input = input.toLowerCase();
         input = input.trim();
         input = input.replaceAll("\\s+","");
         input = input.replace("-", "+-");
