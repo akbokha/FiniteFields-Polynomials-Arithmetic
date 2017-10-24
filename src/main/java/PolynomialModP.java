@@ -202,6 +202,9 @@ public class PolynomialModP implements Cloneable {
             }
             list.add(1);
             PolynomialModP xrminb = new PolynomialModP(list, modPrime);
+            if(r.terms.get(r.terms.size()-1).getNumber() % b.terms.get(b.terms.size()-1).getNumber() != 0) {
+                throw new IllegalArgumentException("Parameters are not divisible");
+            }
             int lcrDIVlcb = r.terms.get(r.terms.size()-1).getNumber() / b.terms.get(b.terms.size()-1).getNumber();
             q = q.sum(xrminb.product(lcrDIVlcb));
             r = r.sum((xrminb.product(lcrDIVlcb)).product(b).negate());
