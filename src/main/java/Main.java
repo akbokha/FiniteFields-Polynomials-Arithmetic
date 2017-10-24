@@ -499,6 +499,9 @@ public class Main {
      * @return true if number is prime, false otherwise
      */
     static boolean isPrime(int n) {
+        if (n == 2) {
+            return true;
+        }
         if (n%2==0) {
             return false;
         }
