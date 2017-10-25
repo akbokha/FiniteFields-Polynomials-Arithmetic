@@ -280,6 +280,35 @@ public class FiniteFieldTest {
         assertFalse(field.isIrreducible(poly));
     }
     
+        @Test
+    public void isIrreducibleConstant() throws Exception {
+        // in the context of Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(0);
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: 0
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // x should be irreducible (in the finite field in question)
+        assertTrue(field.isIrreducible(x));
+    }
+    
     @Test
     public void produceIrreducible() throws CloneNotSupportedException {
         //construct finite field R = Z/2Z, f = x^3 + x + 1
