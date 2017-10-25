@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 /**
  * ADT that represents a polynomial with a modulus
