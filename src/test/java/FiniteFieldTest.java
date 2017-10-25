@@ -1,4 +1,3 @@
-
 import org.junit.Test;
 import java.util.ArrayList;
 
@@ -38,9 +37,9 @@ public class FiniteFieldTest {
         PolynomialModP expResultP = new PolynomialModP(expResultList, modP);
 
         PolynomialModP result = modPolynomialField.takeMod(f.getPolynomial());
-        System.out.println("divide " + p + " by " + modPolynomial);
-        System.out.println("expected polynomial: " + expResultP);
-        System.out.println("result long division: " + result);
+        // System.out.println("divide " + p + " by " + modPolynomial);
+        // System.out.println("expected polynomial: " + expResultP);
+        // System.out.println("result long division: " + result);
         assertEquals(expResultP, result);
     }
 
@@ -281,6 +280,35 @@ public class FiniteFieldTest {
         assertFalse(field.isIrreducible(poly));
     }
     
+        @Test
+    public void isIrreducibleConstant() throws Exception {
+        // in the context of Z/2Z[X]
+        int modP = 2;
+        // d = x^8 + x^4+ x^3 + x
+        ArrayList<Integer> coeff = new ArrayList<>();
+        coeff.add(0);
+        coeff.add(1); // x
+        coeff.add(0);
+        coeff.add(1); // x^3
+        coeff.add(1); // x^4
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(0);
+        coeff.add(1); // x^8
+        PolynomialModP d = new PolynomialModP(coeff, modP);
+
+        // considering finite field: Z/2Z[X]/(x^8 + x^4+ x^3 + x + 1)
+        FiniteField field = new FiniteField(d, modP);
+        
+        // polynomial: 0
+        ArrayList<Integer> coeff2 = new ArrayList<>();
+        coeff2.add(0);
+        PolynomialModP x = new PolynomialModP(coeff2, modP);
+        
+        // x should be irreducible (in the finite field in question)
+        assertTrue(field.isIrreducible(x));
+    }
+    
     @Test
     public void produceIrreducible() throws CloneNotSupportedException {
         //construct finite field R = Z/2Z, f = x^3 + x + 1
@@ -294,6 +322,7 @@ public class FiniteFieldTest {
         FiniteField field = new FiniteField(poly, p);
         for (int i = 1; i <= 10; i++) {
             PolynomialModP result = field.produceIrreduciblePoly(i);
+            assertEquals(i, result.getDegree());
             // System.out.println(result.getTerms());
             // System.out.println("degree: " + i + " irr.poly: " + result.toString() + " w/ deg: " + result.getDegree() + " isIrreducible: " + field.isIrreducible(result));
             assertTrue(field.isIrreducible(result));
@@ -556,7 +585,7 @@ public class FiniteFieldTest {
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, p, false);
         FiniteField field = new FiniteField(poly, p);
-        System.out.println("Field: R = Z/2Z, f = x^2 + x + 1");
+        // System.out.println("Field: R = Z/2Z, f = x^2 + x + 1");
 
         //construct expected ArrayList of elements of the field
         ArrayList<PolynomialModP> field_elements = new ArrayList<>();
@@ -593,7 +622,7 @@ public class FiniteFieldTest {
         terms.add(1);
         PolynomialModP poly = new PolynomialModP(terms, p, false);
         FiniteField field = new FiniteField(poly, p);
-        System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
+        // System.out.println("Field: R = Z/2Z, f = x^3 + x + 1");
 
         //construct expected ArrayList of elements of the field
         ArrayList<PolynomialModP> field_elements = new ArrayList<>();
@@ -629,8 +658,8 @@ public class FiniteFieldTest {
         //get result and compare to expected result
         ArrayList<PolynomialModP> result = field.findElements();
         for(int i = 0; i < field_elements.size(); i++){
-            System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
-            System.out.println("Result element " + i + ": " + result.get(i).toString());
+            // System.out.println("Expected element " + i + ": " + field_elements.get(i).toString());
+            // System.out.println("Result element " + i + ": " + result.get(i).toString());
             assertEquals(field_elements.get(i).toString(), result.get(i).toString());
         }
 

@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -113,15 +112,14 @@ public class FiniteField implements Cloneable {
      * @throws CloneNotSupportedException
      * @thros IllegalArgumentException if {@code poly.getDegree() <= 0}
      */
-    public boolean isIrreducible (PolynomialModP poly) throws CloneNotSupportedException, IllegalArgumentException {
-        if (poly.getDegree() <= 0) {
-            throw new IllegalArgumentException("the polynomial should have a degree >= 1");
+    public boolean isIrreducible (PolynomialModP poly) throws CloneNotSupportedException {
+        if (poly.getTerms().isEmpty()) { // the polynomial 0 is passed as argument
+            return true;
         }
-        boolean isIrreducible = true;
         int n = poly.getDegree();
         ArrayList<PolynomialModP> fieldElements = findElements();
         
-        if (n >= 1) { // constants / linear polynomails are irreducible 
+        if (n > 1) { // constants / linear polynomails are irreducible 
             for (PolynomialModP fieldElement : fieldElements) {
                 if (fieldElement.getDegree() > 0) { // consider only non constant polynomials
                     boolean isDivisible = false;
@@ -135,16 +133,15 @@ public class FiniteField implements Cloneable {
                     }
                     if (isDivisible) { // divisible (no remainder)
                         if (n != fieldElement.getDegree()) {
-                            isIrreducible = false;
-                            return isIrreducible;
+                            return false;
                         }
                     }
                 }
             }
         } else {
-            isIrreducible = false;
+            return true; // constants / linear polynomials are irreducible
         }
-        return isIrreducible;
+        return true; // return from the loop without returning false
     }
     
     /**
