@@ -264,11 +264,12 @@ public class Main {
         PolynomialModP p1 = new PolynomialModP(poly1, prime);
         FiniteField field = new FiniteField(polField, prime);
         boolean isIrreducible = field.isIrreducible(p1);
-        String reducible = "";
         if (!isIrreducible) {
-            reducible = "not";
+            System.out.println(p1.toString() + " is reducible in F(x) = "+polField.toString());
+        } else {
+            System.out.println(p1.toString() + " is irreducible in F(x) = "+polField.toString());
         }
-        System.out.println(p1.toString() + " is "+reducible+" irreducible in F(x) = "+polField.toString());
+        
     }
 
     private static void computeIrrPolynomial(ArrayList<Integer> field1, int prime, int deg) throws CloneNotSupportedException {
