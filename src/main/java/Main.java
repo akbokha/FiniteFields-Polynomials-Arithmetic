@@ -287,7 +287,7 @@ public class Main {
         if (result == null) {
             System.out.println("The inverse of "+p2.toString()+ " in "+ polField.toString() +"does not exist");
         } else {
-            System.out.println("The quotient ("+p1.toString()+") ("+result.toString()+") = "+ field.quotient(p1, p2));
+            System.out.println("The quotient ("+p1.toString()+")("+result.toString()+")^-1 = "+ field.quotient(p1, p2));
         }
     }
 
