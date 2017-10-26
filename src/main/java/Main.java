@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import static java.lang.Integer.max;
@@ -477,7 +479,21 @@ public class Main {
         input = input.replaceAll("\\s+","");
         input = input.replace("-", "+-");
         String[] terms = input.split("\\+");
-        return terms;
+        ArrayList<String> list = new ArrayList<>();
+        for (String term : terms) {
+            list.add(term);
+        }
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().equals("")) {
+                it.remove();
+            }
+        }
+        String[] newTerms = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            newTerms[i] = list.get(i);
+        }
+        return newTerms;
     }
 
     /**
